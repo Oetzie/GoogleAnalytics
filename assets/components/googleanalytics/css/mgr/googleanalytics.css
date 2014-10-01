@@ -1,0 +1,16 @@
+.dashboard-block .vertical-tabs-panel ul {
+	padding: 0;
+	list-style-type: none;
+}
+
+#googleanalytics-panel-home-div {
+	margin: -10px;
+}
+
+#googleanalytics-panel-home-div .x-panel-btns {
+	padding: 15px 20px 15px 15px;
+}
+
+#googleanalytics-panel-home-div .x-panel-btns .x-btn {
+	margin: 0 7px 0 0;
+}
