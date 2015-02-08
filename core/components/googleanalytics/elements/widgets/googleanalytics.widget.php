@@ -57,8 +57,12 @@
 					$this->modx->smarty->assign('authUrl', $this->googleAnalytics->getApiUrl(GoogleAnalytics::URL_AUTH, array('url' => rtrim($this->modx->getOption('site_url'), '/').$this->modx->getOption('manager_url'))));
 					$this->modx->smarty->assign('_lang', $this->modx->lexicon->fetch($prefix = 'googleanalytics.', $removePrefix = true));
 				
-					return $this->modx->smarty->fetch($this->googleAnalytics->config['templatesPath'].'auth.tpl');
+					if ($this->modx->hasPermission('administrator')) {
+						return $this->modx->smarty->fetch($this->googleAnalytics->config['templatesPath'].'auth.tpl');
+					}
 				}
+				
+				return '';
 			}
 
 			$this->modx->regClientCSS($this->googleAnalytics->config['cssUrl'].'mgr/googleanalytics.css');
