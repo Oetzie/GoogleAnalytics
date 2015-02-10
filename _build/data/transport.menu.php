@@ -14,12 +14,13 @@
 	$menu = $modx->newObject('modMenu');
 	$menu->fromArray(array(
 	    'text' 			=> PKG_NAME_LOWER,
-	    'parent' 		=> 'oetzie',
+	    'namespace' 	=> PKG_NAME_LOWER,
+	    'parent' 		=> 'components',
 	    'description' 	=> PKG_NAME_LOWER.'.desc',
-	    'icon' 			=> 'images/icons/plugin.gif',
+	    'icon' 			=> 'bar-chart-o',
 	    'menuindex' 	=> 0,
 	    'params' 		=> '',
-	    'handler' 		=> '',
+	    'handler' 		=> 'window.open("http://www.google.nl/analytics/", "_blank"); return false;',
 	    'permissions'	=> ''
 	), '', true, true);
 	

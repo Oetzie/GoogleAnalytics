@@ -41,8 +41,8 @@
 			$this->modx->controller->addLexiconTopic('googleanalytics:default');
 
 			if (empty($this->googleAnalytics->config['token'])) {
-				if (array_key_exists('token', $_GET)) {
-					$token = trim($this->googleAnalytics->getSessionToken($_GET['token']));
+				if (null !== ($token = $this->modx->getOption('token', $_GET, null))) {
+					$token = trim($this->googleAnalytics->getSessionToken($token));
 					
 					$setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_token');
 					$setting->set('value', $token);
@@ -59,10 +59,10 @@
 				
 					if ($this->modx->hasPermission('administrator')) {
 						return $this->modx->smarty->fetch($this->googleAnalytics->config['templatesPath'].'auth.tpl');
+					} else {
+						return '';
 					}
 				}
-				
-				return '';
 			}
 
 			$this->modx->regClientCSS($this->googleAnalytics->config['cssUrl'].'mgr/googleanalytics.css');
