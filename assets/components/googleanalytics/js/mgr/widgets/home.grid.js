@@ -87,7 +87,8 @@ GoogleAnalytics.grid.Traffic = function(config) {
             dataIndex	: 'source',
             sortable	: true,
             editable	: false,
-            width		: 125
+            width		: 125,
+            renderer	: this.renderUrl
         }, {
             header		: _('googleanalytics.visits'),
             dataIndex	: 'visits',
@@ -144,6 +145,17 @@ GoogleAnalytics.grid.Traffic = function(config) {
 };
 
 Ext.extend(GoogleAnalytics.grid.Traffic, MODx.grid.Grid, {
+	renderUrl: function(d, c) {
+    	if ('' != d && '(direct)' != d && /\./.test(d)) {
+	    	if (!/^(http)/.test(d)) {
+		    	d = 'http://' + d;
+	    	}
+	    	
+    		return '<a href="' + d + '" target="_blank">' + d + '</a>';
+    	}
+    	
+    	return d;
+	},
 	renderPercent: function(d, c) {
     	return Ext.util.Format.number(d, '0,0') + ' %';
     }
@@ -415,3 +427,61 @@ Ext.extend(GoogleAnalytics.grid.SearchSite, MODx.grid.Grid, {
 });
 
 Ext.reg('googleanalytics-grid-search-site', GoogleAnalytics.grid.SearchSite);
+
+GoogleAnalytics.grid.Report404 = function(config) {
+	config = config || {};
+	
+	columns = new Ext.grid.ColumnModel({
+        columns: [{
+            header		: _('googleanalytics.report404_url'),
+            dataIndex	: 'url',
+            sortable	: true,
+            editable	: false,
+            width		: 125
+        }, {
+            header		: _('googleanalytics.report404_referer'),
+            dataIndex	: 'referer',
+            sortable	: true,
+            editable	: false,
+            fixed		: true,
+            width		: 300,
+            renderer	: this.renderUrl
+        }, {
+            header		: _('googleanalytics.report404_hits'),
+            dataIndex	: 'hits',
+            sortable	: true,
+            editable	: false,
+            fixed		: true,
+            width		: 200
+        }]
+    });
+	    
+    Ext.applyIf(config, {
+    	cm			: columns,
+    	url			: GoogleAnalytics.config.connectorUrl,
+		baseParams 	: {
+      		action		: 'mgr/getlist'
+	  	},
+	  	fields		: ['id', 'url', 'referer', 'hits'],
+        paging		: false,
+        sortBy		: 'hits'
+    });
+    
+    GoogleAnalytics.grid.Report404.superclass.constructor.call(this, config);
+};
+
+Ext.extend(GoogleAnalytics.grid.Report404, MODx.grid.Grid, {
+	renderUrl: function(d, c) {
+    	if ('' != d && '(direct)' != d && /\./.test(d)) {
+	    	if (!/^(http)/.test(d)) {
+		    	d = 'http://' + d;
+	    	}
+	    	
+    		return '<a href="' + d + '" target="_blank">' + d + '</a>';
+    	}
+    	
+    	return d;
+	}
+});
+
+Ext.reg('googleanalytics-grid-report404', GoogleAnalytics.grid.Report404);

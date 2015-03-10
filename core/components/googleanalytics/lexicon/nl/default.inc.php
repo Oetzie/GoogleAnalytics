@@ -90,5 +90,9 @@
 	$_lang['googleanalytics.search_exit']					= 'Uitstappunten';
 	$_lang['googleanalytics.search_duration']				= 'Tijd na zoekopdracht';
 	$_lang['googleanalytics.search_depth']					= 'Diepte';
+	$_lang['googleanalytics.report404']						= '404 Pagina\'s';
+	$_lang['googleanalytics.report404_url']					= 'URL';
+	$_lang['googleanalytics.report404_referer']				= 'Verkeersbron';
+	$_lang['googleanalytics.report404_hits']				= 'Bezoeken';
 	
 ?>

@@ -90,5 +90,9 @@
 	$_lang['googleanalytics.search_exit']					= 'Exitpoints';
 	$_lang['googleanalytics.search_duration']				= 'Time after Searchquery';
 	$_lang['googleanalytics.search_depth']					= 'Depth';
+	$_lang['googleanalytics.report404']						= '404 Pages';
+	$_lang['googleanalytics.report404_url']					= 'URL';
+	$_lang['googleanalytics.report404_referer']				= 'Trafficsource';
+	$_lang['googleanalytics.report404_hits']				= 'Hits';
 	
 ?>

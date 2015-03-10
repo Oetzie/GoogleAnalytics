@@ -387,6 +387,31 @@
 
 			return $minResult.':'.$secResult;
 		}
+		
+		/**
+		 * @acces public.
+		 * @return Boolean.
+		 */
+		public function setGoogleAnalytics404() {
+			$criteria = array(
+				'url'		=> $_SERVER['REQUEST_URI'],
+				'referer'	=> '' == $_SERVER['HTTP_REFERER'] ? '(direct)' : $_SERVER['HTTP_REFERER']
+			);
+			
+			if (null === ($report = $this->modx->getObject('GoogleAnalytics404', $criteria))) {
+				$report = $this->modx->newObject('GoogleAnalytics404');
+			}
+			
+			if (null !== $report) {
+				$report->fromArray(array_merge($criteria, array(
+					'hits' 		=> $report->hits + 1
+				)));
+	
+				return $report->save();
+			}
+			
+			return true;
+		}
 	}
 	
 ?>

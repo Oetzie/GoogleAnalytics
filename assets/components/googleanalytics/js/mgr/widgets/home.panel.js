@@ -13,6 +13,8 @@ GoogleAnalytics.panel.Home = function(config) {
 		xtype		: 'googleanalytics-panel-content'
 	}, {
 		xtype		: 'googleanalytics-panel-search'
+	}, {
+		xtype		: 'googleanalytics-panel-report404'
 	}]
 	
 	if (GoogleAnalytics.config.admin) {
@@ -360,6 +362,31 @@ GoogleAnalytics.panel.Search = function(config) {
 Ext.extend(GoogleAnalytics.panel.Search, MODx.Panel);
 
 Ext.reg('googleanalytics-panel-search', GoogleAnalytics.panel.Search);
+
+GoogleAnalytics.panel.Report404 = function(config) {
+    config = config || {};
+
+    Ext.apply(config, {
+		title		: _('googleanalytics.report404'),
+		items		: [{
+        	layout		: 'column',
+        	border		: false,
+        	items		: [{
+	        	columnWidth	: 1,
+	        	title		: '<h2>' + _('googleanalytics.report404') + '</h2>',
+	        	items		: [{
+					xtype		: 'googleanalytics-grid-report404'
+				}]
+			}]
+        }]
+	});
+
+    GoogleAnalytics.panel.Report404.superclass.constructor.call(this, config);
+};
+
+Ext.extend(GoogleAnalytics.panel.Report404, MODx.Panel);
+
+Ext.reg('googleanalytics-panel-report404', GoogleAnalytics.panel.Report404);
 
 GoogleAnalytics.panel.Settings = function(config) {
     config = config || {};
