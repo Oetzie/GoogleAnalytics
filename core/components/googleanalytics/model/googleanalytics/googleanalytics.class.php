@@ -83,11 +83,13 @@
 				'history'				=> trim($this->modx->getOption('googleanalytics_history', $config, 7)),
 				'profile'				=> trim($this->modx->getOption('title', $siteProfile)),
 				'profile_id'			=> trim($this->modx->getOption('profileid', $siteProfile)),
+				'profile_name'			=> trim($this->modx->getOption('profilename', $siteProfile)),
 				'account_id'			=> trim($this->modx->getOption('accountid', $siteProfile)),
 				'web_property_id'		=> trim($this->modx->getOption('webpropertyid', $siteProfile)),
 				'profile_json'			=> trim($this->modx->getOption('googleanalytics_profile', $config)),
 				'start_date'			=> date('Y-m-d', strtotime('-'.($this->modx->getOption('googleanalytics_history', $config, 7) - 1).' day', time())),
 				'end_date' 				=> date('Y-m-d'),
+				'context'				=> 2 == $this->modx->getCount('modContext') ? 0 : 1
 			), $config);
 		
 			$this->modx->addPackage('googleanalytics', $this->config['modelPath']);
@@ -394,6 +396,7 @@
 		 */
 		public function setGoogleAnalytics404() {
 			$criteria = array(
+				'context'	=> $this->modx->context->key,
 				'url'		=> $_SERVER['REQUEST_URI'],
 				'referer'	=> '' == $_SERVER['HTTP_REFERER'] ? '(direct)' : $_SERVER['HTTP_REFERER']
 			);

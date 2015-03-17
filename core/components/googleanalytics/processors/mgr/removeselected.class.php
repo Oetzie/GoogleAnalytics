@@ -22,7 +22,7 @@
 	 * Suite 330, Boston, MA 02111-1307 USA
 	 */
 
-	class GoogleAnalytics404GetListProcessor extends modObjectGetListProcessor {
+	class GoogleAnalytics404RemoveSelectedProcessor extends modProcessor {
 		/**
 		 * @acces public.
 		 * @var String.
@@ -39,54 +39,25 @@
 		 * @acces public.
 		 * @var String.
 		 */
-		public $defaultSortField = 'hits';
-		
-		/**
-		 * @acces public.
-		 * @var String.
-		 */
-		public $defaultSortDirection = 'DESC';
-		
-		/**
-		 * @acces public.
-		 * @var String.
-		 */
 		public $objectType = 'googleanalytics.404';
 		
 		/**
 		 * @acces public.
-		 * @param Object $c.
-		 * @return Object.
+		 * @return Mixed.
 		 */
-		public function prepareQueryBeforeCount(xPDOQuery $c) {
-			$context = $this->getProperty('context');
-			
-			if (!empty($context)) {
-				$c->where(array('context' => $context));
-			}
-						
-			$query = $this->getProperty('query');
-			
-			if (!empty($query)) {
-				$c->where(array(
-					'url:LIKE' 			=> '%'.$query.'%',
-					'OR:referer:LIKE' 	=> '%'.$query.'%'
-				));
+		public function process() {
+			foreach (explode(',', $this->getProperty('ids')) as $key => $value) {
+				$criteria = array('id' => $value);
+				
+				if (false !== ($object = $this->modx->getObject($this->classKey, $criteria))) {
+					$object->remove();
+				}
 			}
 			
-			return $c;
-		}
-		
-		/**
-		 * @acces public.
-		 * @param Object $query.
-		 * @return Array.
-		 */
-		public function prepareRow(xPDOObject $object) {
-			return $object->toArray();	
+			return $this->outputArray(array());
 		}
 	}
 
-	return 'GoogleAnalytics404GetListProcessor';
-	
+	return 'GoogleAnalytics404RemoveSelectedProcessor';
+
 ?>

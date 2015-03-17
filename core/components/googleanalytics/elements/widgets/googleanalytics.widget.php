@@ -64,6 +64,13 @@
 				
 				return '';
 			}
+			
+			if ('' != $this->googleAnalytics->config['web_property_id']) {
+				$this->widget->name = $this->modx->lexicon('googleanalytics.title', array(
+					'profile'		=> $this->googleAnalytics->config['profile_name'],
+					'profile_id'	=> $this->googleAnalytics->config['web_property_id']
+				));
+			}
 
 			$this->modx->regClientCSS($this->googleAnalytics->config['cssUrl'].'mgr/googleanalytics.css');
 			$this->modx->regClientStartupScript($this->googleAnalytics->config['jsUrl'].'mgr/googleanalytics.js');

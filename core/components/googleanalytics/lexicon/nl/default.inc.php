@@ -38,6 +38,7 @@
 	$_lang['setting_googleanalytics_history']				= 'Verleden';
 	$_lang['setting_googleanalytics_history_desc']			= 'Het aantal dagen dat getoond dient te worden.';
 	
+	$_lang['googleanalytics.title']							= 'Google Analytics statistieken van [[+profile]] <i>([[+profile_id]])</i>';
 	$_lang['googleanalytics.label_profile']					= 'Website profiel';
 	$_lang['googleanalytics.label_profile_desc']			= 'Het website profiel waar de gegevens van Google Analytics opgehaald moeten worden';
 	$_lang['googleanalytics.label_cachetime']				= 'Cache tijd';
@@ -91,8 +92,17 @@
 	$_lang['googleanalytics.search_duration']				= 'Tijd na zoekopdracht';
 	$_lang['googleanalytics.search_depth']					= 'Diepte';
 	$_lang['googleanalytics.report404']						= '404 Pagina\'s';
+	$_lang['googleanalytics.report404_filter_context']		= 'Filter op context...';
+	$_lang['googleanalytics.report404_report']				= '404 Pagina';
+	$_lang['googleanalytics.report404_reports']				= '404 Pagina\'s';
 	$_lang['googleanalytics.report404_url']					= 'URL';
 	$_lang['googleanalytics.report404_referer']				= 'Verkeersbron';
 	$_lang['googleanalytics.report404_hits']				= 'Bezoeken';
+	$_lang['googleanalytics.report404_remove']						= '404 Pagina verwijderen';
+	$_lang['googleanalytics.report404_remove_confirm']				= 'Weet je zeker dat je deze 404 pagina wilt verwijderen?';
+	$_lang['googleanalytics.report404_remove_selected']				= 'Geselecteerde 404 pagina\'s verwijderen';
+	$_lang['googleanalytics.report404_remove_selected_confirm']		= 'Weet je zeker dat je de geselecteerde 404 pagina\'s wilt verwijderen?';
+	$_lang['googleanalytics.report404_reset']						= 'Alle 404 pagina\'s verwijderen';
+	$_lang['googleanalytics.report404_reset_confirm']				= 'Weet je zeker dat je alle 404 pagina\'s wilt verwijderen?';
 	
 ?>

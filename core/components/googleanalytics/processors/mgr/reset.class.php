@@ -21,8 +21,8 @@
 	 * Google Analytics 404; if not, write to the Free Software Foundation, Inc., 59 Temple Place,
 	 * Suite 330, Boston, MA 02111-1307 USA
 	 */
-
-	class GoogleAnalytics404GetListProcessor extends modObjectGetListProcessor {
+	 
+	class GoogleAnalytics404ResetProcessor extends modObjectRemoveProcessor {
 		/**
 		 * @acces public.
 		 * @var String.
@@ -39,54 +39,19 @@
 		 * @acces public.
 		 * @var String.
 		 */
-		public $defaultSortField = 'hits';
-		
-		/**
-		 * @acces public.
-		 * @var String.
-		 */
-		public $defaultSortDirection = 'DESC';
-		
-		/**
-		 * @acces public.
-		 * @var String.
-		 */
 		public $objectType = 'googleanalytics.404';
 		
 		/**
 		 * @acces public.
-		 * @param Object $c.
-		 * @return Object.
+		 * @return Mixed.
 		 */
-		public function prepareQueryBeforeCount(xPDOQuery $c) {
-			$context = $this->getProperty('context');
+		public function process() {
+			$this->modx->removeCollection($this->classKey);
 			
-			if (!empty($context)) {
-				$c->where(array('context' => $context));
-			}
-						
-			$query = $this->getProperty('query');
-			
-			if (!empty($query)) {
-				$c->where(array(
-					'url:LIKE' 			=> '%'.$query.'%',
-					'OR:referer:LIKE' 	=> '%'.$query.'%'
-				));
-			}
-			
-			return $c;
-		}
-		
-		/**
-		 * @acces public.
-		 * @param Object $query.
-		 * @return Array.
-		 */
-		public function prepareRow(xPDOObject $object) {
-			return $object->toArray();	
+			return $this->outputArray(array());
 		}
 	}
-
-	return 'GoogleAnalytics404GetListProcessor';
 	
+	
+	return 'GoogleAnalytics404ResetProcessor';
 ?>

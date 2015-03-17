@@ -29,6 +29,7 @@
 		'extends' 	=> 'xPDOSimpleObject',
 		'fields' 	=> array(
 			'id'			=> null,
+			'context'		=> null,
 			'url' 			=> null,
 			'referer' 		=> null,
 			'hits' 			=> null
@@ -41,6 +42,13 @@
 				'null' 		=> false,
 				'index' 	=> 'pk',
 				'generated'	=> 'native'
+			),
+			'context' 	=> array(
+				'dbtype' 	=> 'varchar',
+				'precision' => '75',
+				'phptype' 	=> 'string',
+				'null' 		=> false,
+				'default' 	=> ''
 			),
 			'url' 		=> array(
 				'dbtype' 	=> 'text',

@@ -38,6 +38,7 @@
 	$_lang['setting_googleanalytics_history']				= 'History';
 	$_lang['setting_googleanalytics_history_desc']			= 'The number of days that should be shown.';
 	
+	$_lang['googleanalytics.title']							= 'Google Analytics stats of [[+profile]] <i>([[+profile_id]])</i>';
 	$_lang['googleanalytics.label_profile']					= 'Website profile';
 	$_lang['googleanalytics.label_profile_desc']			= 'The site profile  where your Google Analytics data to be retrieved';
 	$_lang['googleanalytics.label_cachetime']				= 'Cache time';
@@ -90,9 +91,18 @@
 	$_lang['googleanalytics.search_exit']					= 'Exitpoints';
 	$_lang['googleanalytics.search_duration']				= 'Time after Searchquery';
 	$_lang['googleanalytics.search_depth']					= 'Depth';
-	$_lang['googleanalytics.report404']						= '404 Pages';
+	$_lang['googleanalytics.report404']						= '404 pages';
+	$_lang['googleanalytics.report404_filter_context']		= 'Filter at context...';
+	$_lang['googleanalytics.report404_report']				= '404 Page';
+	$_lang['googleanalytics.report404_reports']				= '404 Pages';
 	$_lang['googleanalytics.report404_url']					= 'URL';
 	$_lang['googleanalytics.report404_referer']				= 'Trafficsource';
 	$_lang['googleanalytics.report404_hits']				= 'Hits';
+	$_lang['googleanalytics.report404_remove']						= 'Delete 404 page';
+	$_lang['googleanalytics.report404_remove_confirm']				= 'Are you sure you want to delete this 404 page?';
+	$_lang['googleanalytics.report404_remove_selected']				= 'Delete selected 404 pages';
+	$_lang['googleanalytics.report404_remove_selected_confirm']		= 'Are you sure you want to delete the selected 404 pages?';
+	$_lang['googleanalytics.report404_reset']						= 'Delete all 404 pages';
+	$_lang['googleanalytics.report404_reset_confirm']				= 'Are you sure you want to delete all 404 pages?';
 	
 ?>
