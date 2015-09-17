@@ -21,7 +21,7 @@
 		)
 	);
 	
-	$translations = $modx->getOption($language, $modx->getOption('manager_language'), $translations['en']);
+	$translations = $modx->getOption($modx->getOption('manager_language'), $translations, $translations['en']);
 	
 	$settings = array(
 		'googleanalytics_admin_groups'	=> 'Administrator',
@@ -39,25 +39,25 @@
    			}
 
         	$output = '<div class="x-form-item">
-				<label for="ext-comp-googleanalytics1" class="x-form-item-label" style="width: 100px;">'.$modx->getOption('admin_groups', $translations).'</label>
-				<div class="x-form-element" style="padding-left: 105px">
-					<input type="text" name="googleanalytics_admin_groups" id="ext-comp-googleanalytics1" value="'.$modx->getOption('googleanalytics_admin_groups', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 413px;">
+				<label for="ext-comp-googleanalytics1" class="x-form-item-label" style="width: 150px;">'.$modx->getOption('admin_groups', $translations).'</label>
+				<div class="x-form-element" style="padding-left: 155px">
+					<input type="text" name="googleanalytics_admin_groups" id="ext-comp-googleanalytics1" value="'.$modx->getOption('googleanalytics_admin_groups', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 350px;">
 				</div>
 				<div class="x-form-clear-left"></div>
 			</div>
 			<label class="desc-under" style="font-weight: normal;">'.$modx->getOption('admin_groups_desc', $translations).'</label>
 			<div class="x-form-item">
-				<label for="ext-comp-googleanalytics2" class="x-form-item-label" style="width: 100px;">'.$modx->getOption('cachetime', $translations).'</label>
-				<div class="x-form-element" style="padding-left: 105px">
-					<input type="text" name="googleanalytics_cachetime" id="ext-comp-googleanalytics2" value="'.$modx->getOption('googleanalytics_cachetime', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 413px;">
+				<label for="ext-comp-googleanalytics2" class="x-form-item-label" style="width: 150px;">'.$modx->getOption('cachetime', $translations).'</label>
+				<div class="x-form-element" style="padding-left: 155px">
+					<input type="text" name="googleanalytics_cachetime" id="ext-comp-googleanalytics2" value="'.$modx->getOption('googleanalytics_cachetime', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 350px;">
 				</div>
 				<div class="x-form-clear-left"></div>
 			</div>
 			<label class="desc-under" style="font-weight: normal;">'.$modx->getOption('cachetime_desc', $translations).'</label>
 			<div class="x-form-item">
-				<label for="ext-comp-googleanalytics3" class="x-form-item-label" style="width: 100px;">'.$modx->getOption('history', $translations).'</label>
-				<div class="x-form-element" style="padding-left: 105px">
-					<input type="text" name="googleanalytics_history" id="ext-comp-googleanalytics3" value="'.$modx->getOption('googleanalytics_history', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 413px;">
+				<label for="ext-comp-googleanalytics3" class="x-form-item-label" style="width: 150px;">'.$modx->getOption('history', $translations).'</label>
+				<div class="x-form-element" style="padding-left: 155px">
+					<input type="text" name="googleanalytics_history" id="ext-comp-googleanalytics3" value="'.$modx->getOption('googleanalytics_history', $settings).'" class="x-form-text x-form-field" msgtarget="under" autocomplete="on" size="20" style="width: 350px;">
 				</div>
 				<div class="x-form-clear-left"></div>
 			</div>
