@@ -3,6 +3,16 @@ Google Analytics
 ----------------------
 
 ----------------------
+Version: 1.1.0-pl
+Released: 2015-09-17
+----------------------
+- Bugfixes
+- New Google Auth
+- New Real Time Visitors function
+- Complete rebuild
+	- New ExtJS and PHP code
+
+----------------------
 Version: 1.0.1-pl
 Released: 2015-03-10
 ----------------------

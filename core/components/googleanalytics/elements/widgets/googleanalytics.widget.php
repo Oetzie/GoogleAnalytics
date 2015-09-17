@@ -31,6 +31,12 @@
 		
 		/**
 		 * @acces public.
+		 * @var String.
+		 */
+		public $cssBlockClass = 'dashboard-google-analytics';
+		
+		/**
+		 * @acces public.
 		 * @return String.
 		 */
 		public function render() {
@@ -39,48 +45,37 @@
 			$this->googleAnalytics = new GoogleAnalytics($this->modx);
 			
 			$this->modx->controller->addLexiconTopic('googleanalytics:default');
-
-			if (empty($this->googleAnalytics->config['token'])) {
-				if (array_key_exists('token', $_GET)) {
-					$token = trim($this->googleAnalytics->getSessionToken($_GET['token']));
-					
-					$setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_token');
-					$setting->set('value', $token);
-					$setting->save();
-					
-					$this->googleAnalytics->config['token'] = $token;
-					
-					$this->modx->cacheManager->refresh(array('system_settings' => array()));
-				}
-				
-				if (empty($this->googleAnalytics->config['token'])) {
-					$this->modx->smarty->assign('authUrl', $this->googleAnalytics->getApiUrl(GoogleAnalytics::URL_AUTH, array('url' => rtrim($this->modx->getOption('site_url'), '/').$this->modx->getOption('manager_url'))));
-					$this->modx->smarty->assign('_lang', $this->modx->lexicon->fetch($prefix = 'googleanalytics.', $removePrefix = true));
-				
-					if ($this->modx->hasPermission('administrator')) {
-						return $this->modx->smarty->fetch($this->googleAnalytics->config['templatesPath'].'auth.tpl');
-					}
-				}
-				
-				return '';
-			}
 			
-			if ('' != $this->googleAnalytics->config['web_property_id']) {
-				$this->widget->name = $this->modx->lexicon('googleanalytics.title', array(
-					'profile'		=> $this->googleAnalytics->config['profile_name'],
-					'profile_id'	=> $this->googleAnalytics->config['web_property_id']
-				));
-			}
-
 			$this->modx->regClientCSS($this->googleAnalytics->config['cssUrl'].'mgr/googleanalytics.css');
 			$this->modx->regClientStartupScript($this->googleAnalytics->config['jsUrl'].'mgr/googleanalytics.js');
 			$this->modx->regClientStartupHTMLBlock('<script type="text/javascript">
 				Ext.onReady(function() {
 					MODx.config.help_url = "http://rtfm.modx.com/extras/revo/'.$this->googleAnalytics->getHelpUrl().'";
 				
-					GoogleAnalytics.config = '.$this->modx->toJSON(array_merge(array('admin' => $this->googleAnalytics->hasPermission()), $this->googleAnalytics->config)).';
+					GoogleAnalytics.config = '.$this->modx->toJSON(array_merge(array('admin' => $this->googleAnalytics->hasPermission(), 'authUrl' => $this->googleAnalytics->getAuthUrl()), $this->googleAnalytics->config)).';
 				});
 			</script>');
+
+			if (empty($this->googleAnalytics->config['token'])) {
+				$this->modx->regClientStartupScript($this->googleAnalytics->config['jsUrl'].'mgr/widgets/auth.panel.js');
+					
+				$this->modx->smarty->assign('authUrl', $this->googleAnalytics->getAuthUrl());
+				$this->modx->smarty->assign('_lang', $this->modx->lexicon->fetch($prefix = 'googleanalytics.', $removePrefix = true));
+				
+				if ($this->modx->hasPermission('administrator')) {
+					return $this->modx->smarty->fetch($this->googleAnalytics->config['templatesPath'].'auth.tpl');
+				} else {
+					return '';
+				}
+			}
+			
+			if ('' != $this->googleAnalytics->config['profileId']) {
+				$this->widget->name = $this->modx->lexicon('googleanalytics.title', array(
+					'profile'		=> $this->googleAnalytics->config['profileName'],
+					'profile_id'	=> $this->googleAnalytics->config['profileId']
+				));
+			}
+
 			$this->modx->regClientStartupScript($this->googleAnalytics->config['jsUrl'].'mgr/widgets/home.grid.js');
 			$this->modx->regClientStartupScript($this->googleAnalytics->config['jsUrl'].'mgr/widgets/home.panel.js');
 				

@@ -31,13 +31,13 @@ GoogleAnalytics.grid.Visitors = function(config) {
             width		: 125
         }, {
             header		: _('googleanalytics.time_on_site'),
-            dataIndex	: 'vgTimeOnSite',
+            dataIndex	: 'avgTimeOnSite',
             sortable	: true,
             editable	: false,
             fixed		: true,
             width		: 125
         }, {
-            header		: _('googleanalytics.new_visits'),
+            header		: _('googleanalytics.visits_new'),
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
@@ -62,7 +62,7 @@ GoogleAnalytics.grid.Visitors = function(config) {
       		action		: 'mgr/getdata',
       		data		: 'visits'
 	  	},
-	  	fields		: ['date', 'visits', 'visitors', 'pageviews', 'pageviewsPerVisit', 'vgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+	  	fields		: ['date', 'visits', 'visitors', 'pageviews', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         sortBy		: 'date'
     });
@@ -105,13 +105,13 @@ GoogleAnalytics.grid.Traffic = function(config) {
             width		: 125
         }, {
             header		: _('googleanalytics.time_on_site'),
-            dataIndex	: 'vgTimeOnSite',
+            dataIndex	: 'avgTimeOnSite',
             sortable	: true,
             editable	: false,
             fixed		: true,
             width		: 125
         }, {
-            header		: _('googleanalytics.new_visits'),
+            header		: _('googleanalytics.visits_new'),
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
@@ -136,7 +136,7 @@ GoogleAnalytics.grid.Traffic = function(config) {
       		action		: 'mgr/getdata',
       		data		: 'traffic'
 	  	},
-	  	fields		: ['source', 'visits', 'visitors', 'pageviewsPerVisit', 'vgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+	  	fields		: ['source', 'visits', 'visitors', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         sortBy		: 'visits'
     });
@@ -203,7 +203,8 @@ GoogleAnalytics.grid.ContentHigh = function(config) {
     	url			: GoogleAnalytics.config.connectorUrl,
 		baseParams 	: {
       		action		: 'mgr/getdata',
-      		data		: 'entrances'
+      		data		: 'entrances',
+      		size		: 15
 	  	},
 	  	fields		: ['pagePath', 'entrances', 'bounces', 'entranceBounceRate', 'exits'],
         paging		: false,
@@ -239,8 +240,8 @@ GoogleAnalytics.grid.ContentLow = function(config) {
             fixed		: true,
             width		: 125
         }, {
-            header		: _('googleanalytics.pageviews'),
-            dataIndex	: 'pageviews',
+            header		: _('googleanalytics.bounces'),
+            dataIndex	: 'bounces',
             sortable	: true,
             editable	: false,
             fixed		: true,
@@ -261,9 +262,10 @@ GoogleAnalytics.grid.ContentLow = function(config) {
     	url			: GoogleAnalytics.config.connectorUrl,
 		baseParams 	: {
       		action		: 'mgr/getdata',
-      		data		: 'exits'
+      		data		: 'exits',
+      		size		: 15
 	  	},
-	  	fields		: ['pagePath', 'exits', 'pageviews', 'exitRate'],
+	  	fields		: ['pagePath', 'exits', 'bounces', 'pageviews', 'exitRate'],
         paging		: false,
         sortBy		: 'exits'
     });
@@ -279,7 +281,7 @@ Ext.extend(GoogleAnalytics.grid.ContentLow, MODx.grid.Grid, {
 
 Ext.reg('googleanalytics-grid-content-low', GoogleAnalytics.grid.ContentLow);
 
-GoogleAnalytics.grid.SearchGlobal = function(config) {
+GoogleAnalytics.grid.Search = function(config) {
 	config = config || {};
 	
 	columns = new Ext.grid.ColumnModel({
@@ -306,14 +308,14 @@ GoogleAnalytics.grid.SearchGlobal = function(config) {
             renderer	: this.renderPercent
         }, {
             header		: _('googleanalytics.time_on_site'),
-            dataIndex	: 'vgTimeOnSite',
+            dataIndex	: 'avgTimeOnSite',
             sortable	: true,
             editable	: false,
             fixed		: true,
             width		: 125
             
         }, {
-            header		: _('googleanalytics.new_visits'),
+            header		: _('googleanalytics.visits_new'),
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
@@ -336,97 +338,24 @@ GoogleAnalytics.grid.SearchGlobal = function(config) {
     	url			: GoogleAnalytics.config.connectorUrl,
 		baseParams 	: {
       		action		: 'mgr/getdata',
-      		data		: 'search'
+      		data		: 'search',
+      		size		: 15
 	  	},
-	  	fields		: ['keyword', 'visits', 'pageviewsPerVisit', 'vgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+	  	fields		: ['keyword', 'visits', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         sortBy		: 'visits'
     });
     
-    GoogleAnalytics.grid.SearchGlobal.superclass.constructor.call(this, config);
+    GoogleAnalytics.grid.Search.superclass.constructor.call(this, config);
 };
 
-Ext.extend(GoogleAnalytics.grid.SearchGlobal, MODx.grid.Grid, {
+Ext.extend(GoogleAnalytics.grid.Search, MODx.grid.Grid, {
 	renderPercent: function(d, c) {
     	return Ext.util.Format.number(d, '0,0') + ' %';
     }
 });
 
-Ext.reg('googleanalytics-grid-search-global', GoogleAnalytics.grid.SearchGlobal);
-
-GoogleAnalytics.grid.SearchSite = function(config) {
-	config = config || {};
-	
-	columns = new Ext.grid.ColumnModel({
-        columns: [{
-            header		: _('googleanalytics.search_keyword'),
-            dataIndex	: 'searchKeyword',
-            sortable	: true,
-            editable	: false,
-            width		: 125
-        }, {
-            header		: _('googleanalytics.search_unique'),
-            dataIndex	: 'searchUniques',
-            sortable	: true,
-            editable	: false,
-            fixed		: true,
-            width		: 125
-        }, {
-            header		: _('googleanalytics.search_pageviews'),
-            dataIndex	: 'searchResultViews',
-            sortable	: true,
-            editable	: false,
-            fixed		: true,
-            width		: 125,
-            renderer	: this.renderPercent
-        }, {
-            header		: _('googleanalytics.search_exit'),
-            dataIndex	: 'searchExitRate',
-            sortable	: true,
-            editable	: false,
-            fixed		: true,
-            width		: 125,
-            renderer	: this.renderPercent
-            
-        }, {
-            header		: _('googleanalytics.search_duration'),
-            dataIndex	: 'searchDuration',
-            sortable	: true,
-            editable	: false,
-            fixed		: true,
-            width		: 125   
-        }, {
-            header		: _('googleanalytics.search_depth'),
-            dataIndex	: 'searchDepth',
-            sortable	: true,
-            editable	: false,
-            fixed		: true,
-            width		: 125
-        }]
-    });
-	    
-    Ext.applyIf(config, {
-    	cm			: columns,
-    	url			: GoogleAnalytics.config.connectorUrl,
-		baseParams 	: {
-      		action		: 'mgr/getdata',
-      		data		: 'sitesearch'
-	  	},
-	  	fields		: ['searchKeyword', 'searchUniques', 'searchResultViews', 'searchExitRate', 'searchDuration', 'searchDepth'],
-        paging		: false,
-        sortBy		: 'searchResultViews'
-    });
-    
-    GoogleAnalytics.grid.SearchSite.superclass.constructor.call(this, config);
-};
-
-Ext.extend(GoogleAnalytics.grid.SearchSite, MODx.grid.Grid, {
-	renderPercent: function(d, c) {
-    	return Ext.util.Format.number(d, '0,0') + ' %';
-    }
-});
-
-Ext.reg('googleanalytics-grid-search-site', GoogleAnalytics.grid.SearchSite);
+Ext.reg('googleanalytics-grid-search', GoogleAnalytics.grid.Search);
 
 GoogleAnalytics.grid.Report404 = function(config) {
 	config = config || {};

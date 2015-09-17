@@ -1,16 +1,78 @@
-.dashboard-block .vertical-tabs-panel ul {
+.dashboard-google-analytics .body {
+	max-height: 550px;
+}
+
+.dashboard-google-analytics #googleanalytics-panel-auth-div,
+.dashboard-google-analytics #googleanalytics-panel-home-div {
+	margin: -10px;
+}
+
+.dashboard-google-analytics .panel-desc {
+	margin: 0;
+}
+
+.dashboard-google-analytics #googleanalytics-panel-home-div .vertical-tabs-panel ul {
 	padding: 0;
 	list-style-type: none;
 }
 
-#googleanalytics-panel-home-div {
-	margin: -10px;
-}
-
-#googleanalytics-panel-home-div .x-panel-btns {
+.dashboard-google-analytics #googleanalytics-panel-home-div .x-panel-btns {
 	padding: 15px 20px 15px 15px;
 }
 
-#googleanalytics-panel-home-div .x-panel-btns .x-btn {
+.dashboard-google-analytics #googleanalytics-panel-home-div .x-panel-btns .x-btn {
 	margin: 0 7px 0 0;
+}
+
+.dashboard-google-analytics .google-analytics-metas {
+	margin: 30px 0 0;
+}
+
+.dashboard-google-analytics .google-analytics-metas table {
+	width: 100%;
+	border: 1px solid #e4e4e4;
+	border-collapse: collapse;
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	   	  	border-radius: 3px;
+}
+
+.dashboard-google-analytics .google-analytics-metas table td {
+	border: 1px solid #e4e4e4;
+	color: #888888;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+.dashboard-google-analytics .google-analytics-metas table td .highlight {
+	position: relative;
+	color: #666666;
+    font-size: 35px;
+    line-height: 1;
+}
+
+.dashboard-google-analytics .google-analytics-metas table td .highlight .compare {
+    position: absolute;
+    right: 13px;
+    top: 12px;
+    color: #a0a0a0;
+    font-size: 10px;
+    min-width: 15px;
+    padding-top: 15px;
+
+    text-align: center;
+    background: url('../../images/mgr/equal.png') no-repeat top center;
+}
+
+.dashboard-google-analytics .google-analytics-metas table td .highlight .compare.up {
+	right: 5px; 
+    background-image: url('../../images/mgr/arrow-up.png'); 
+
+}
+
+.dashboard-google-analytics .google-analytics-metas table td .highlight .compare.down { 
+    right: 5px;
+    background-image: url('../../images/mgr/arrow-down.png'); 
 }

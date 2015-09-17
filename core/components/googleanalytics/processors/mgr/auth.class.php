@@ -22,7 +22,7 @@
 	 * Suite 330, Boston, MA 02111-1307 USA
 	 */
 
-	class GoogleAnalyticsSettingsProcessor extends modProcessor {
+	class GoogleAnalyticsAuthProcessor extends modProcessor {
 		/**
 		 * @acces public.
 		 * @var Object.
@@ -46,47 +46,6 @@
 		 * @return Mixed.
 		 */
 		public function process() {
-			foreach ($this->getProperties() as $key => $value) {
-				switch($key) {
-					case 'profile':
-						$values = explode(':', $value);
-						
-						if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_profile_id'))) {
-							$setting->set('value', array_shift($values));
-							$setting->save();
-						}
-							
-						if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_profile_name'))) {
-							$setting->set('value', array_shift($values));
-							$setting->save();
-						}
-						
-						break;
-					case 'cachetime':
-						if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_cachetime'))) {
-							$setting->set('value', $value);
-							$setting->save();
-						}
-						
-						break;
-					case 'history':
-						if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_history'))) {
-							$setting->set('value', $value);
-							$setting->save();
-						}
-						
-						break;
-					case 'panels':
-						if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_panels'))) {
-							$setting->set('value', implode(array_merge($value, array('summary', 'settings')), ','));
-							$setting->save();
-						}
-						
-						break;
-				}
-			}
-			
-			$this->modx->getCacheManager()->refresh(array('system_settings' => array()));
 			$this->modx->getCacheManager()->delete('googleanalytics-visits', $this->googleAnalytics->config['cacheOptions']);
 			$this->modx->getCacheManager()->delete('googleanalytics-visiters', $this->googleAnalytics->config['cacheOptions']);
 			$this->modx->getCacheManager()->delete('googleanalytics-meta', $this->googleAnalytics->config['cacheOptions']);
@@ -100,11 +59,62 @@
 			$this->modx->getCacheManager()->delete('googleanalytics-sitesearch', $this->googleAnalytics->config['cacheOptions']);
 			$this->modx->getCacheManager()->delete('googleanalytics-realtime', $this->googleAnalytics->config['cacheOptions']);
 			$this->modx->getCacheManager()->delete('googleanalytics-profiles', $this->googleAnalytics->config['cacheOptions']);
-	
-			return $this->success($this->modx->lexicon('googleanalytics.settings_saved'));
+			
+			foreach ($this->getProperties() as $key => $value) {
+				switch($key) {
+					case 'revoke':
+						if ($this->googleAnalytics->revokeAuthToken()) {
+							if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_refresh_token'))) {
+								$setting->set('value', '');
+								$setting->save();
+							}
+							
+							if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_profile_id'))) {
+								$setting->set('value', '');
+								$setting->save();
+							}
+							
+							if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_profile_name'))) {
+								$setting->set('value', '');
+								$setting->save();
+							}
+							
+							$this->modx->getCacheManager()->delete('googleanalytics-token', $this->googleAnalytics->config['cacheOptions']);
+							$this->modx->getCacheManager()->refresh(array('system_settings' => array()));
+							
+							return $this->success($this->modx->lexicon('googleanalytics.auth_revoke_success'));
+						}
+						
+						$this->modx->getCacheManager()->delete('googleanalytics-token', $this->googleAnalytics->config['cacheOptions']);
+						$this->modx->getCacheManager()->refresh(array('system_settings' => array()));
+						
+						return $this->failure($this->modx->lexicon('googleanalytics.auth_revoke_failure'));
+							
+						break;
+					case 'code':
+						if (false !== ($token = $this->googleAnalytics->getAuthToken($value))) {
+							if (null !== ($setting = $this->modx->getObject('modSystemSetting', 'googleanalytics_refresh_token'))) {
+								$setting->set('value', trim($token['refresh_token']));
+						
+								if ($setting->save()) {
+									$this->modx->getCacheManager()->set('googleanalytics-token', trim($token['access_token']), trim($token['expires_in']), $this->googleAnalytics->config['cacheOptions']);
+									$this->modx->getCacheManager()->refresh(array('system_settings' => array()));
+									
+									return $this->success($this->modx->lexicon('googleanalytics.auth_success'));
+								}
+							}
+						}
+						
+						$this->modx->getCacheManager()->refresh(array('system_settings' => array()));
+						
+						return $this->failure($this->modx->lexicon('googleanalytics.auth_failure'));
+						
+						break;
+				}
+			}
 		}
 	}
 
-	return 'GoogleAnalyticsSettingsProcessor';
+	return 'GoogleAnalyticsAuthProcessor';
 
 ?>

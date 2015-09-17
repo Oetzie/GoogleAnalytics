@@ -39,7 +39,8 @@
 		 	$this->googleAnalytics = new GoogleAnalytics($this->modx);
 
 			$this->setDefaultProperties(array(
-				'data' => 'visits'
+				'data' 	=> 'visits',
+				'limit'	=> 0
 			));
 			
 			return parent::initialize();
@@ -50,7 +51,13 @@
 		 * @return Mixed.
 		 */
 		public function process() {
-			return $this->outputArray($this->googleAnalytics->getData($this->getProperty('data')));
+			$data = $this->googleAnalytics->getData($this->getProperty('data'));
+			
+			if (0 != ($size = $this->getProperty('size'))) {
+				$data = array_slice($data, 0, $size);
+			}
+			
+			return $this->outputArray($data);
 		}
 	}
 

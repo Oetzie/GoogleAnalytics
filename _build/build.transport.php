@@ -8,7 +8,7 @@
 	define('PKG_NAME', 			'GoogleAnalytics');
 	define('PKG_NAME_LOWER', 	strtolower(PKG_NAME));
 	define('PKG_NAMESPACE', 	strtolower(PKG_NAME));
-	define('PKG_VERSION',		'1.0.1');
+	define('PKG_VERSION',		'1.1.0');
 	define('PKG_RELEASE',		'pl');
 
 	$root = dirname(dirname(__FILE__)).'/';
@@ -211,11 +211,22 @@
 		
 	$modx->log(xPDO::LOG_LEVEL_INFO, 'Setting Package Attributes...');
 
-	$builder->setPackageAttributes(array(
-	    'license' 	=> file_get_contents($sources['docs'].'license.txt'),
-	    'readme' 	=> file_get_contents($sources['docs'].'readme.txt'),
-	    'changelog' => file_get_contents($sources['docs'].'changelog.txt'),
-	));
+	if (file_exists($sources['build'].'/setup.options.php')) {
+		$builder->setPackageAttributes(array(
+		    'license' 		=> file_get_contents($sources['docs'].'license.txt'),
+		    'readme' 		=> file_get_contents($sources['docs'].'readme.txt'),
+		    'changelog' 	=> file_get_contents($sources['docs'].'changelog.txt'),
+		    'setup-options' => array(
+	        	'source' 		=> $sources['build'].'/setup.options.php'
+			)
+		));
+	} else {
+		$builder->setPackageAttributes(array(
+		    'license' 		=> file_get_contents($sources['docs'].'license.txt'),
+		    'readme' 		=> file_get_contents($sources['docs'].'readme.txt'),
+		    'changelog' 	=> file_get_contents($sources['docs'].'changelog.txt')
+		));
+	}
 
 	$modx->log(xPDO::LOG_LEVEL_INFO, 'Zipping up package...');
 
