@@ -198,7 +198,7 @@
 		 * @return String.
 		 */
 		public function getAuthTokenParam() {
-			$token = $this->modx->getCacheManager()->get('googleanalytics-token', $$this->googleAnalytics->config['cacheOptions']);
+			$token = $this->modx->getCacheManager()->get('googleanalytics-token', $this->config['cacheOptions']);
 			
 			if (empty($accessToken)) {
            		$token = $this->refreshAuthToken();
@@ -388,48 +388,50 @@
 			$output = array();
 			
 			if (null !== ($data = json_decode($sessionData, true))) {
-				foreach ($data['rows'] as $key => $value) {
-					$row = array();
-							
-					foreach ($value as $subKey => $subValue) {
-						$name = $data['columnHeaders'][$subKey]['name'];
+				if (isset($data['rows'])) {
+					foreach ($data['rows'] as $key => $value) {
+						$row = array();
 								
-						switch ($name) {
-							case 'ga:visitorType':
-								$translations = array(
-									'new visitor'		=> $this->modx->lexicon('googleanalytics.visitors_new'),
-									'returning visitor'	=> $this->modx->lexicon('googleanalytics.visitors_returning')
-								);
-								
-								$row[end(explode(':', $name))] = $translations[strtolower($subValue)];
-								
-								break;
-							case 'ga:deviceCategory':
-								$translations = array(
-									'tablet'			=> $this->modx->lexicon('googleanalytics.visitors_devices_tablet'),
-									'mobile'			=> $this->modx->lexicon('googleanalytics.visitors_devices_mobile'),
-									'desktop'			=> $this->modx->lexicon('googleanalytics.visitors_devices_desktop')
-								);
-								
-								$row[end(explode(':', $name))] = $translations[strtolower($subValue)];
-								
-								break;
-							case 'ga:date':
-								$row[end(explode(':', $name))] = date($this->modx->getOption('manager_date_format'), strtotime($subValue));
-										
-								break;
-							case 'ga:avgTimeOnSite':
-								$row[end(explode(':', $name))] = $this->timeFormat($subValue);
-										
-								break;
-							default:
-								$row[end(explode(':', $name))] = $subValue;
-										
-								break;
+						foreach ($value as $subKey => $subValue) {
+							$name = $data['columnHeaders'][$subKey]['name'];
+									
+							switch ($name) {
+								case 'ga:visitorType':
+									$translations = array(
+										'new visitor'		=> $this->modx->lexicon('googleanalytics.visitors_new'),
+										'returning visitor'	=> $this->modx->lexicon('googleanalytics.visitors_returning')
+									);
+									
+									$row[end(explode(':', $name))] = $translations[strtolower($subValue)];
+									
+									break;
+								case 'ga:deviceCategory':
+									$translations = array(
+										'tablet'			=> $this->modx->lexicon('googleanalytics.visitors_devices_tablet'),
+										'mobile'			=> $this->modx->lexicon('googleanalytics.visitors_devices_mobile'),
+										'desktop'			=> $this->modx->lexicon('googleanalytics.visitors_devices_desktop')
+									);
+									
+									$row[end(explode(':', $name))] = $translations[strtolower($subValue)];
+									
+									break;
+								case 'ga:date':
+									$row[end(explode(':', $name))] = date($this->modx->getOption('manager_date_format'), strtotime($subValue));
+											
+									break;
+								case 'ga:avgTimeOnSite':
+									$row[end(explode(':', $name))] = $this->timeFormat($subValue);
+											
+									break;
+								default:
+									$row[end(explode(':', $name))] = $subValue;
+											
+									break;
+							}
 						}
+								
+						$output[] = $row;
 					}
-							
-					$output[] = $row;
 				}
 			}
 					
