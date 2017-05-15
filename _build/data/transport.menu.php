@@ -17,11 +17,11 @@
 	    'namespace' 	=> PKG_NAME_LOWER,
 	    'parent' 		=> 'components',
 	    'description' 	=> PKG_NAME_LOWER.'.desc',
-	    'icon' 			=> 'bar-chart-o',
+	    'icon' 			=> 'bar-chart',
 	    'menuindex' 	=> 0,
 	    'params' 		=> '',
-	    'handler' 		=> 'window.open("http://www.google.nl/analytics/", "_blank"); return false;',
-	    'permissions'	=> ''
+	    'handler' 		=> '',
+	    'permissions'	=> 'googleanalytics'
 	), '', true, true);
 	
 	$menu->addOne($action);

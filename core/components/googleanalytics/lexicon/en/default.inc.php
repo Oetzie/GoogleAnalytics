@@ -3,10 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2014 by Oene Tjeerd de Bruin <info@oetzie.nl>
-	 *
-	 * This file is part of Google Analytics, a real estate property listings component
-	 * for MODX Revolution.
+	 * Copyright 2017 by Oene Tjeerd de Bruin <modx@oetzie.nl>
 	 *
 	 * Google Analytics is free software; you can redistribute it and/or modify it under
 	 * the terms of the GNU General Public License as published by the Free Software
@@ -23,111 +20,88 @@
 	 */
 
 	$_lang['googleanalytics'] 								= 'Google Analytics';
-	$_lang['googleanalytics.desc'] 							= 'Google Analytics dashboard widget shows the results and statistics from your Google Analytics account.';
+	$_lang['googleanalytics.desc'] 							= 'View the visitor stats with Google Analytics.';
 	
 	$_lang['area_googleanalytics']							= 'Google Analytics';
+
+	$_lang['setting_googleanalytics.account']				= 'Google Analytics account';
+	$_lang['setting_googleanalytics.account_desc']			= 'Het Google Analytics account whose data should be displayed.';
+	$_lang['setting_googleanalytics.api_useragent']			= 'API useragent';
+	$_lang['setting_googleanalytics.api_useragent_desc']	= 'The useragent for the API\'s. Default is "GoogleAnalyticsOAuth v2.0.0".';
+	$_lang['setting_googleanalytics.client_id']				= 'Google Analytics client ID';
+	$_lang['setting_googleanalytics.client_id_desc']		= 'The Google Analytics client ID, you can get this at https://console.developers.google.com/.';
+	$_lang['setting_googleanalytics.client_secret']			= 'Google Analytics client secret';
+	$_lang['setting_googleanalytics.client_secret_desc']	= 'The Google Analytics client secret, you can get this at https://console.developers.google.com/.';
+	$_lang['setting_googleanalytics.refresh_token']			= 'Google Analytics refresh token';
+	$_lang['setting_googleanalytics.refresh_token_desc']	= 'The Google Analytics refresh token, you can get this with oAuth with the minimum scope "https://www.googleapis.com/auth/analytics.readonly".';
+	$_lang['setting_googleanalytics.history']				= 'Days';
+	$_lang['setting_googleanalytics.history_desc']			= 'The number of days that should be shown, minimum 7 and maximum 30 days.';
+	$_lang['setting_googleanalytics.panels']				= 'Components';
+	$_lang['setting_googleanalytics.panels_desc']			= 'The stats components that should be shown, to separate components use a comma.';
+
+	$_lang['googleanalytics.widget_visitors']				= 'Google Analytics visitors';
+	$_lang['googleanalytics.widget_visitors_desc']			= 'Google Analytics visitors widgets shows the visitors stats from Google Analytics.';
+	$_lang['googleanalytics.widget_visitors_title']			= 'Google Analytics visitors ([[+property]])';
+	$_lang['googleanalytics.widget_realtime']				= 'Google Analytics realtime';
+	$_lang['googleanalytics.widget_realtime_desc']			= 'Google Analytics realtime widget shows the realtime visitors of Google Analytics.';
+	$_lang['googleanalytics.widget_realtime_title']			= 'Google Analytics realtime ([[+property]])';
 	
-	$_lang['setting_googleanalytics_admin_groups']			= 'Usergroups';
-	$_lang['setting_googleanalytics_admin_groups_desc']		= 'The usergroups that are allowed to acces the admin panel of the settings, to separate usergroups use a comma.';
-	$_lang['setting_googleanalytics_refresh_token']			= 'Google refresh token';
-	$_lang['setting_googleanalytics_refresh_token_desc']	= 'The Google Analytics refresh token that allows MODX to access Google Analytics.';
-	$_lang['setting_googleanalytics_client_id']				= 'Google authorization ID';
-	$_lang['setting_googleanalytics_client_id_desc']		= 'The Google authorization ID (Client ID) for the acces to the Google API\'s. You can get this at https://console.developers.google.com/.';
-	$_lang['setting_googleanalytics_client_secret']			= 'Google secret authorization';
-	$_lang['setting_googleanalytics_client_secret_desc']	= 'The Google secret authorization (Client Secret) for the acces to the Google API\'s. You can get this at https://console.developers.google.com/.';
-	$_lang['setting_googleanalytics_profile_id']			= 'Site profile';
-	$_lang['setting_googleanalytics_profile_id_desc']		= 'The selected site profile where your Google Analytics data should be retrieved from.';
-	$_lang['setting_googleanalytics_profile_name']			= 'The profile name';
-	$_lang['setting_googleanalytics_profile_name_desc']		= 'The selected site profile name where your Google Analytics data should be retrieved from.';
-	$_lang['setting_googleanalytics_cachetime']				= 'Cache time';
-	$_lang['setting_googleanalytics_cachetime_desc']		= 'The number of minutes that the retrieved data from Google Analytics should be stored in the cache before retrieve new data.';
-	$_lang['setting_googleanalytics_history']				= 'History';
-	$_lang['setting_googleanalytics_history_desc']			= 'The number of days that should be shown.';
-	$_lang['setting_googleanalytics_panels']				= 'Components';
-	$_lang['setting_googleanalytics_panels_desc']			= 'The components that should be shown.';
+	$_lang['googleanalytics.label_account']					= 'Google Analytics account';
+	$_lang['googleanalytics.label_account_desc']			= 'The Het Google Analytics account whose data should be displayed.';
+	$_lang['googleanalytics.label_property']				= 'Google Analytics property';
+	$_lang['googleanalytics.label_property_desc']			= 'Het Google Analytics property whose data should be displayed.';
+	$_lang['googleanalytics.label_profile']					= 'Google Analytics profiel';
+	$_lang['googleanalytics.label_profile_desc']			= 'Het Google Analytics profiel what will displayed as default.';
 	
-	$_lang['googleanalytics.title']							= 'Google Analytics stats of [[+profile]] <i>([[+profile_id]])</i>';
-	$_lang['googleanalytics.settings_title']				= 'Settings';
-	$_lang['googleanalytics.settings_saved']				= 'Google Analytics settings saved.';
-	$_lang['googleanalytics.auth_desc']						= 'MODX has Currently no access to your Google Analytics account. Click on the button \'Request authorization code\' to give MODX access to your Google Analytics account. A new window will be opent with a Google page, where you may first have to login with your Google account. After the login and accepting the authorization will Google provide you an authorization code. Copy and past this authorization code in the field and click on the \'Validate authorization code\'.';
-	$_lang['googleanalytics.auth_button']					= 'Request authorization code';
-	$_lang['googleanalytics.auth_validate']					= 'Validate authorization code';
-	$_lang['googleanalytics.auth_success']					= 'Google\'s authorization code validated and saved.';
-	$_lang['googleanalytics.auth_failure']					= 'Google\'s authorization code could not be validated, please try again.';
-	$_lang['googleanalytics.auth_revoke']					= 'Revoke authorization code';
-	$_lang['googleanalytics.auth_revoke_confirm']			= 'Are you sure you want to revoke the authorization code?';
-	$_lang['googleanalytics.auth_revoke_success']			= 'Google\'s authorization code revoked.';
-	$_lang['googleanalytics.auth_revoke_failure']			= 'Google\'s authorization code could not be revoked, please try again.';
-	$_lang['googleanalytics.label_code']					= 'Authorization code';
-	$_lang['googleanalytics.label_code_desc']				= 'Copy and past the authorization code that Google provided you.';
-	$_lang['googleanalytics.label_profile']					= 'Site profiel';
-	$_lang['googleanalytics.label_profile_desc']			= 'The site profile where your Google Analytics data should be retrieved from.';
-	$_lang['googleanalytics.label_cachetime']				= 'Cache time';
-	$_lang['googleanalytics.label_cachetime_desc']			= 'The number of minutes that the retrieved data from Google Analytics should be stored in the cache before retrieve new data.';
-	$_lang['googleanalytics.label_history']					= 'History';
-	$_lang['googleanalytics.label_history_desc']			= 'The number of days that should be shown.';
-	$_lang['googleanalytics.label_panels']					= 'Components';
-	$_lang['googleanalytics.label_panel_desc']				= 'Check the components that should be shown..';
-	
-	$_lang['googleanalytics.select_profile']				= 'Select a site profile';
-	$_lang['googleanalytics.select_cachetime']				= 'Select the cache time in minutes';
-	$_lang['googleanalytics.select_history']				= 'Select the history in days';
-	$_lang['googleanalytics.summary_title']					= 'Overview';
-	$_lang['googleanalytics.summary_active']				= 'At this moment are there <strong>{activeUsers}</strong> active visitors';
-	$_lang['googleanalytics.visitors_title']				= 'Visitors';
-	$_lang['googleanalytics.visitors_visitors']				= 'Visitors';
-	$_lang['googleanalytics.visitors_devices']				= 'Devices';
-	$_lang['googleanalytics.visitors_devices_tablet']		= 'Tablet';
-	$_lang['googleanalytics.visitors_devices_mobile']		= 'Mobile';
-	$_lang['googleanalytics.visitors_devices_desktop']		= 'Desktop';
-	$_lang['googleanalytics.visitors_new']					= 'New';
-	$_lang['googleanalytics.visitors_returning']			= 'Returning';
-	$_lang['googleanalytics.sources_title']					= 'Traffic sources';
-	$_lang['googleanalytics.sources_traffic']				= 'Traffic sources';
-	$_lang['googleanalytics.sources_operatingsystems']		= 'Operatingssystem';
-	$_lang['googleanalytics.sources_source']				= 'Source';
-	$_lang['googleanalytics.sources_searchengine']			= 'Search engine';
-	$_lang['googleanalytics.sources_direct']				= 'Direct traffic';
-	$_lang['googleanalytics.sources_reference']				= 'Referring traffic';
-	$_lang['googleanalytics.content_title']					= 'Important pages';
-	$_lang['googleanalytics.content_high']					= 'Top 15 entrancepoints';
-	$_lang['googleanalytics.content_low']					= 'Top 15 exitpoints';
-	$_lang['googleanalytics.content_source']				= 'Page';
-	$_lang['googleanalytics.content_entrances']				= 'Entrancepoints';
-	$_lang['googleanalytics.content_exit']					= 'Exitpoints';
-	$_lang['googleanalytics.content_exitrate']				= 'Exitrate';
-	$_lang['googleanalytics.search_title']					= 'Search';
-	$_lang['googleanalytics.search_keyword']				= 'Keyword';
-	$_lang['googleanalytics.search_unique']					= 'Unique searchqueries';
-	$_lang['googleanalytics.search_pageviews']				= 'Results pageviews';
-	$_lang['googleanalytics.search_exit']					= 'Exitpoints';
-	$_lang['googleanalytics.search_duration']				= 'Time after searchquery';
-	$_lang['googleanalytics.search_depth']					= 'Depth';
+	$_lang['googleanalytics.stats_desc']					= 'Google Analytics is a Google service to collect and detail statistics from the website. The purpose of this service is to give you a clear picture of, among other things, visitor flows, traffic sources and pageviews. Using this information, you can customize advertising campaigns or even parts of the website to the behavior of the visitor.';
+	$_lang['googleanalytics.open_googleanalytics']			= 'Go to Google Analytics';
+	$_lang['googleanalytics.settings']						= 'Settings';
+	$_lang['googleanalytics.filter_account']				= 'Choose an account';
+	$_lang['googleanalytics.filter_property']				= 'Choose a property';
+	$_lang['googleanalytics.filter_profile']				= 'Choose a profile';
+	$_lang['googleanalytics.online_now']					= 'At this moment';
+	$_lang['googleanalytics.online_visitor']				= 'acitve visitor';
+	$_lang['googleanalytics.online_visitors']				= 'acitve visitors';
+	$_lang['googleanalytics.title_summary']					= 'Summary';
+	$_lang['googleanalytics.title_visitors']				= 'Visitors';
+	$_lang['googleanalytics.title_sources']					= 'Traffic sources';
+	$_lang['googleanalytics.title_content']					= 'Content';
+	$_lang['googleanalytics.title_content_search']			= 'Searchqueries';
+	$_lang['googleanalytics.title_block_summary']			= 'Stats last [[+history]] days';
+	$_lang['googleanalytics.title_block_meta']				= 'Stats compared last [[+history]] days';
+	$_lang['googleanalytics.title_block_visitors']			= 'Visitors';
+	$_lang['googleanalytics.title_block_language']			= 'Language';
+	$_lang['googleanalytics.title_block_country']			= 'Countries';
+	$_lang['googleanalytics.title_block_devices']			= 'Devices';
+	$_lang['googleanalytics.title_block_sources']			= 'Traffic sources';
+	$_lang['googleanalytics.title_block_content_high']		= 'Top 15 entrancepoints';
+	$_lang['googleanalytics.title_block_content_low']		= 'Top 15 exitpoints';
+	$_lang['googleanalytics.title_block_content_search']	= 'Searchqueries';
 	$_lang['googleanalytics.visits']						= 'Visits';
-	$_lang['googleanalytics.visits_on']						= 'Visits at';
+	$_lang['googleanalytics.visits_on']						= '[[+data]] visits at [[+date_long]]';
 	$_lang['googleanalytics.visits_new']					= 'New visits';
 	$_lang['googleanalytics.visitors']						= 'Visitors';
-	$_lang['googleanalytics.pageviews']						= 'Pageviews';
-	$_lang['googleanalytics.pageviews_on']					= 'Pageviews at';
+	$_lang['googleanalytics.visitors_on']					= '[[+data]] visitors at [[+date_long]]';
+	$_lang['googleanalytics.visitors_time']					= 'Time on site';
+	$_lang['googleanalytics.pageviews']						= 'Pagesviews';
+	$_lang['googleanalytics.pageviews_on']					= '[[+data]] pageviews at [[+date_long]]';
 	$_lang['googleanalytics.pageviews_unique']				= 'Unique pageviews';
+	$_lang['googleanalytics.new_visitor']					= 'New';
+	$_lang['googleanalytics.returning_visitor']				= 'Returning';
 	$_lang['googleanalytics.bounces']						= 'Bounces';
 	$_lang['googleanalytics.bouncerate']					= 'Bouncerate';
-	$_lang['googleanalytics.time_on_site']					= 'Time on site';
+	$_lang['googleanalytics.tablet']						= 'Tablet';
+	$_lang['googleanalytics.mobile']						= 'Mobiel';
+	$_lang['googleanalytics.desktop']						= 'Desktop';
+	$_lang['googleanalytics.source']						= 'Source';
+	$_lang['googleanalytics.source_search']					= 'Search engine';
+	$_lang['googleanalytics.source_socialmedia']			= 'Social media';
+	$_lang['googleanalytics.source_direct']					= 'Direct traffic';
+	$_lang['googleanalytics.source_reference']				= 'Referring traffic';
+	$_lang['googleanalytics.content']						= 'Page';
+	$_lang['googleanalytics.entrances']						= 'Entrancepoints';
+	$_lang['googleanalytics.exits']							= 'Exitpoints';
 	$_lang['googleanalytics.exitrate']						= 'Exitrate';
-	$_lang['googleanalytics.days']							= 'days';
-	$_lang['googleanalytics.minutes']						= 'minutes';
-	$_lang['googleanalytics.report404_title']				= 'Error pages';
-	$_lang['googleanalytics.report404_filter_context']		= 'Filter op context...';
-	$_lang['googleanalytics.report404_report']				= '404 page';
-	$_lang['googleanalytics.report404_reports']				= '404 Pages';
-	$_lang['googleanalytics.report404_url']					= 'URL';
-	$_lang['googleanalytics.report404_referer']				= 'Traffic source';
-	$_lang['googleanalytics.report404_hits']				= 'Visits';
-	$_lang['googleanalytics.report404_remove']						= 'Delete 404 page';
-	$_lang['googleanalytics.report404_remove_confirm']				= 'Are you sure you want to delete this 404 page?';
-	$_lang['googleanalytics.report404_remove_selected']				= 'Delete selected 404 pages';
-	$_lang['googleanalytics.report404_remove_selected_confirm']		= 'Are you sure you want to delete the selected 404 pages?';
-	$_lang['googleanalytics.report404_reset']						= 'Delete all 404 pages';
-	$_lang['googleanalytics.report404_reset_confirm']				= 'Are you sure you want to delete all 404 pages?';
-	
+	$_lang['googleanalytics.keyword']						= 'Keyword';
+		
 ?>
