@@ -3,7 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2014 by Oene Tjeerd de Bruin <info@oetzie.nl>
+	 * Copyright 2017 by Oene Tjeerd de Bruin <oenetjeerd@sterc.nl>
 	 *
 	 * This file is part of Google Analytics, a real estate property listings component
 	 * for MODX Revolution.
@@ -49,12 +49,20 @@
 				
 				$this->modx->regClientStartupHTMLBlock('<script type="text/javascript">
 					Ext.onReady(function() {
-						GoogleAnalytics.config = '.$this->modx->toJSON($this->googleanalytics->config).';
+						GoogleAnalytics.config = '.$this->modx->toJSON(array_merge($this->googleanalytics->config, array(
+                            'authorized'			=> $this->googleanalytics->isAuthorized(),
+                            'authorized_profile'	=> $this->googleanalytics->getAuthorizedProfile()
+                        ))).';
 					});
 				</script>');
-				
+
+                $this->modx->regClientStartupScript($this->googleanalytics->config['js_url'].'mgr/libs/jquery.min.js');
+                $this->modx->regClientStartupScript($this->googleanalytics->config['js_url'].'mgr/libs/highcharts.js');
+
+                $this->modx->regClientStartupScript($this->googleanalytics->config['js_url'].'mgr/widgets/home.charts.js');
+
 				$this->modx->regClientStartupScript($this->googleanalytics->config['js_url'].'mgr/sections/visitors.widget.js');
-	
+
 				if (is_array($this->googleanalytics->config['lexicons'])) {
 					foreach ($this->googleanalytics->config['lexicons'] as $lexicon) {
 						$this->modx->controller->addLexiconTopic($lexicon);

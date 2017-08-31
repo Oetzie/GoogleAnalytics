@@ -3,7 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2017 by Oene Tjeerd de Bruin <modx@oetzie.nl>
+	 * Copyright 2017 by Oene Tjeerd de Bruin <oenetjeerd@sterc.nl>
 	 *
 	 * Google Analytics is free software; you can redistribute it and/or modify it under
 	 * the terms of the GNU General Public License as published by the Free Software
@@ -70,17 +70,16 @@
 				'css_url' 				=> $assetsUrl.'css/',
 				'assets_url' 			=> $assetsUrl,
 				'connector_url'			=> $assetsUrl.'connector.php',
-				'version'				=> '2.0.0',
-				'branding'				=> (boolean) $this->modx->getOption('googleanalytics.branding', null, true),
-				'branding_url'			=> 'http://www.oetzie.nl',
-				'branding_help_url'		=> 'http://www.werkvanoetzie.nl/extras/googleanalytics',
+				'version'				=> '2.0.1',
+				'branding_url'			=> $this->modx->getOption('googleanalytics.branding_url', null, ''),
+				'branding_help_url'		=> $this->modx->getOption('googleanalytics.branding_url_help', null, ''),
 				'has_permission'		=> $this->hasPermission(),
-				'authorized'			=> $this->isAuthorized(),
-				'authorized_profile'	=> $this->getAuthorizedProfile(),
+                'authorize_url'         => $this->getAuthorizeUrl(),
 				'google_analytics_url'	=> 'http://www.google.nl/analytics/',
-				'history'				=> (int) $this->modx->getOption('googleanalytics.history', null, 7)
+				'history'				=> (int) $this->modx->getOption('googleanalytics.history', null, 7),
+                'panels'				=> explode(',', $this->modx->getOption('googleanalytics.panels', null, ''))
 			), $config);
-			
+
 			$this->modx->addPackage('googleanalytics', $this->config['model_path']);
 			
 			if (is_array($this->config['lexicons'])) {
@@ -94,11 +93,27 @@
 		
 		/**
 		 * @access public.
-		 * @return String.
+		 * @return String|Boolean.
 		 */
 		public function getHelpUrl() {
-			return $this->config['branding_help_url'].'?v='.$this->config['version'];
+		    if (!empty($this->config['branding_help_url'])) {
+                return $this->config['branding_help_url'].'?v=' . $this->config['version'];
+            }
+
+            return false;
 		}
+
+        /**
+         * @access public.
+         * @return String|Boolean.
+         */
+        public function getBrandingUrl() {
+            if (!empty($this->config['branding_url'])) {
+                return $this->config['branding_url'];
+            }
+
+            return false;
+        }
 		
 		/**
 		 * @access public.
@@ -119,6 +134,23 @@
 			
 			return $this->request;
 		}
+
+        /**
+         * @access public.
+         * @return String.
+         */
+        public function getAuthorizeUrl() {
+            return $this->getRequest()->getAuthorizeUrl();
+        }
+
+        /**
+         * @access public.
+         * @param String $code.
+         * @return Array|Boolean.
+         */
+        public function getAuthorizeTokens($code) {
+            return $this->getRequest()->getAuthorizeTokens($code);
+        }
 		
 		/**
 		 * @access public.
@@ -151,7 +183,7 @@
 
 					if (isset($account['account'], $account['property'], $account['profile'])) {
 						if (false !== ($data = $this->getRequest()->getAccountProfile($account['account'], $account['property'], $account['profile']))) {
-							return array(
+						    return array(
 								'id'				=> $data['id'],
 								'account_id'		=> $data['accountId'],
 								'property_id'		=> $data['webPropertyId'],

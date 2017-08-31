@@ -11,11 +11,8 @@ GoogleAnalytics.panel.Access = function(config) {
         }, {
         	layout		: 'form',
             items		: [{
-            	html		: '<div class="google-analytics-summary">' + 
-            		
-            	'</div>' + 
-            	'<p>' + _('googleanalytics.stats_desc') + '</p>',
-                bodyCssClass	: 'panel-desc google-analytics-description'
+            	html		: '<div class="google-analytics-summary"></div><p>' + _('googleanalytics.stats_desc') + '</p>',
+                bodyCssClass : 'panel-desc google-analytics-description'
             }]
         }]
     });

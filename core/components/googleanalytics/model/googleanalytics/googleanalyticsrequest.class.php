@@ -3,7 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2017 by Oene Tjeerd de Bruin <modx@oetzie.nl>
+	 * Copyright 2017 by Oene Tjeerd de Bruin <oenetjeerd@sterc.nl>
 	 *
 	 * Google Analytics is free software; you can redistribute it and/or modify it under
 	 * the terms of the GNU General Public License as published by the Free Software
@@ -21,8 +21,10 @@
 
 	class GoogleAnalyticsRequest {
 		const API_URL 						= 'https://www.googleapis.com/analytics/v3/';
+        const API_OAUTH_URL                 = 'https://accounts.google.com/o/oauth2/auth';
 		const API_OAUTH_TOKEN_URL 			= 'https://accounts.google.com/o/oauth2/token';
 		const API_OAUTH_TOKEN_STATUS_URL	= 'https://accounts.google.com/o/oauth2/tokeninfo';
+		const API_OAUTH_REDIRECT_URL        = 'urn:ietf:wg:oauth:2.0:oob';
 		
 		/**
 		 * @access public.
@@ -83,27 +85,73 @@
 		public function getApiSecret() {
 			return $this->modx->getOption('googleanalytics.client_secret');
 		}
+
+        /**
+         * @access public.
+         * @return String.
+         */
+		public function getAuthorizeUrl() {
+		    return GoogleAnalyticsRequest::API_OAUTH_URL.'?'.http_build_query(array(
+                'response_type' => 'code',
+                'client_id'     => $this->getApiKey(),
+                'redirect_uri'  => GoogleAnalyticsRequest::API_OAUTH_REDIRECT_URL,
+                'scope'         => 'https://www.googleapis.com/auth/analytics.readonly'
+            ));
+        }
 		
 		/**
 		 * @access public.
-		 * @return String|Boolean.
+         * @param String $code.
+		 * @return Array|Boolean.
 		 */
-		public function getApiAccessToken() {
-			$parameters = array(
-				'refresh_token' 	=> $this->modx->getOption('googleanalytics.refresh_token'),
-				'client_id' 		=> $this->getApiKey(),
-				'client_secret' 	=> $this->getApiSecret(),
-				'redirect_uri'		=> rtrim($this->modx->getOption('site_url'), '/').$this->modx->getOption('manager_url'),
-				'grant_type'		=> 'refresh_token'
-			);
-			
-			if (false !== ($token = $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_URL, $parameters, 'POST'))) {
-				if (isset($token['access_token'])) {
-					return $token['access_token'];
-				}
-			}
+		public function getAuthorizeTokens($code) {
+            $parameters = array(
+                'code'          => $code,
+                'client_id'     => $this->getApiKey(),
+                'client_secret' => $this->getApiSecret(),
+                'redirect_uri'  => GoogleAnalyticsRequest::API_OAUTH_REDIRECT_URL,
+                'scope'         => 'https://www.googleapis.com/auth/analytics.readonly',
+                'grant_type'    => 'authorization_code'
+            );
 
-			return false;
+            if (false !== ($token = $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_URL, $parameters, 'POST'))) {
+                return $token;
+            }
+
+            return false;
+        }
+
+        /**
+         * @access public.
+         * @param String $code.
+         * @return String|Boolean.
+         */
+		public function getAccessToken() {
+            $token = $this->modx->getCacheManager()->get('access_token', array(
+                xPDO::OPT_CACHE_KEY => 'googleanalytics'
+            ));
+
+            if (empty($token)) {
+                $parameters = array(
+                    'refresh_token' 	=> $this->modx->getOption('googleanalytics.refresh_token', null, ''),
+                    'client_id' 		=> $this->getApiKey(),
+                    'client_secret' 	=> $this->getApiSecret(),
+                    'redirect_uri'		=> GoogleAnalyticsRequest::API_OAUTH_REDIRECT_URL,
+                    'grant_type'		=> 'refresh_token'
+                );
+
+                if (false !== ($tokens = $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_URL, $parameters, 'POST'))) {
+                    if (isset($tokens['access_token'])) {
+                        $this->modx->getCacheManager()->set('access_token', $tokens['access_token'], $tokens['expires_in'], array(
+                            xPDO::OPT_CACHE_KEY => 'googleanalytics'
+                        ));
+
+                        $token = $tokens['access_token'];
+                    }
+                }
+            }
+
+            return $token;
 		}
 		
 		/**
@@ -111,9 +159,9 @@
 		 * @return Array|Boolean.
 		 */
 		public function isAuthorized() {
-			return $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_STATUS_URL, array(
-				'access_token'	=> $this->getApiAccessToken()
-			));
+            return $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_STATUS_URL, array(
+                'access_token'	=> $this->getAccessToken()
+            ));
 		}
 		
 		/**
@@ -186,7 +234,7 @@
 					case 'meta':
 					case 'meta-summary':
 						$parameters = array_merge($parameters, array(
-							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviews,ga:uniquePageviews,ga:percentNewVisits,ga:exitRate,ga:pageviewsPerVisit,ga:avgTimeOnSite,ga:visitBounceRate',
+							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviews,ga:uniquePageviews,ga:percentNewVisits,ga:exitRate,ga:pageviewsPerVisit,ga:avgSessionDuration,ga:visitBounceRate',
 							'dimensions'	=> 'ga:date',
 							'sort'			=> 'ga:date',
 						));
@@ -194,7 +242,7 @@
 						break;
 					case 'visits':
 						$parameters = array_merge($parameters, array(
-							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviews,ga:pageviewsPerVisit,ga:avgTimeOnSite,ga:percentNewVisits,ga:visitBounceRate',
+							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviews,ga:pageviewsPerVisit,ga:avgSessionDuration,ga:percentNewVisits,ga:visitBounceRate',
 							'dimensions'	=> 'ga:date',
 							'sort'			=> 'ga:date'
 						));
@@ -235,7 +283,7 @@
 					case 'sources':
 					case 'sources-summary':
 						$parameters = array_merge($parameters, array(
-							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviewsPerVisit,ga:avgTimeOnSite,ga:percentNewVisits,ga:visitBounceRate',
+							'metrics'		=> 'ga:visits,ga:visitors,ga:pageviewsPerVisit,ga:avgSessionDuration,ga:percentNewVisits,ga:visitBounceRate',
 							'dimensions'	=> 'ga:source',
 							'sort'			=> '-ga:visits'
 						));
@@ -259,12 +307,20 @@
 						break;
 					case 'content-search':
 						$parameters = array_merge($parameters, array(
-							'metrics'		=> 'ga:visits,ga:pageviewsPerVisit,ga:avgTimeOnSite,ga:percentNewVisits,ga:visitBounceRate',
+							'metrics'		=> 'ga:visits,ga:pageviewsPerVisit,ga:avgSessionDuration,ga:percentNewVisits,ga:visitBounceRate',
 							'dimensions'	=> 'ga:keyword',
 							'sort'			=> '-ga:visits'
 						));
 				
 						break;
+                    case 'goals':
+                        $parameters = array_merge($parameters, array(
+                            'metrics'		=> 'ga:goalStartsAll,ga:goalCompletionsAll',
+                            'dimensions'	=> 'ga:goalCompletionLocation',
+                            'sort'			=> '-ga:goalCompletionsAll'
+                        ));
+
+                        break;
 					case 'realtime':
 						$parameters = array_merge($parameters, array(
 							'metrics'		=> 'rt:activeUsers',
@@ -273,12 +329,12 @@
 				
 						break;
 				}
-				
+
 				if (false !== ($data = $this->request($url, $parameters))) {
 					return $this->parseData($data, $type);
 				}
 			}
-			
+
 			return array();
 		}
 		
@@ -290,15 +346,21 @@
 		 */
 		public function parseData($data, $type) {
 			$output = array();
+			$totals = array();
+
+			if (isset($data['totalsForAllResults'])) {
+			    $totals = $data['totalsForAllResults'];
+            }
 			
 			if (false !== strstr($type, 'meta')) {
-				if (isset($data['totalsForAllResults'])) {
-					$output = $data['totalsForAllResults'];
-				}
-				
-				if ('meta-summary' == $type) {
-					$output = $this->parseDataMeta($output);
-				}
+                $output = $totals;
+
+				switch ($type) {
+                    case 'meta-summary':
+                        $output = $this->parseDataMeta($output);
+
+                        break;
+                }
 			} else {	
 				if (isset($data['rows'])) {
 					foreach ($data['rows'] as $value) {
@@ -309,7 +371,9 @@
 	
 							switch ($key) {
 								case 'date':
-									$row[$key] = strftime('%d %b', strtotime($column));
+									$row[$key] = date('Y-m-d 00:00:00', strtotime($column));
+
+									$row[$key.'_short'] = strftime('%d %b', strtotime($column));
 									$row[$key.'_long'] = strftime('%A %d %B %Y', strtotime($column));
 									
 									break;
@@ -321,12 +385,29 @@
 									$row[$key] = $this->modx->lexicon('googleanalytics.'.str_replace(' ', '_', strtolower($column)));
 									
 									break;
-								case 'avgTimeOnSite':
+								case 'avgSessionDuration':
 									$row[$key] = $this->timeFormat($column);
 											
 									break;
+                                case 'goalStartsAll':
+                                case 'goalCompletionsAll':
+                                    $row[$key] = (int) $column;
+
+                                    if (isset($totals['ga:'.$key])) {
+                                        if (0 == $totals['ga:'.$key]) {
+                                            $row[$key.'Percent'] = (int) 0;
+                                        } else {
+                                            $row[$key.'Percent'] = (int) round((100 / (int)$totals['ga:' . $key]) * (int)$column, 0);
+                                        }
+                                    }
+
+                                    break;
 								default:
-									$row[$key] = $column;
+								    if (is_numeric($column)) {
+                                        $row[$key] = (int) $column;
+                                    } else {
+                                        $row[$key] = $column;
+                                    }
 									
 									break;
 							}
@@ -403,7 +484,7 @@
 						);
 						
 						break;
-					case 'avgTimeOnSite':						
+					case 'avgSessionDuration':
 						$data = array(
 							'name' 		=> $this->modx->lexicon('googleanalytics.visitors_time'),
 							'value'		=> $this->timeFormat($value)
@@ -525,7 +606,7 @@
 			}
 			
 			$parameters = array_merge($parameters, array(
-	        	'access_token' => $this->getApiAccessToken(),
+	        	'access_token' => $this->getAccessToken(),
         	));
         	
 			return $this->requestApi($url, $parameters, $method, $options);

@@ -9,21 +9,21 @@ GoogleAnalytics.panel.Home = function(config) {
             id			: 'googleanalytics-header',
             cls			: 'modx-page-header'
         }, {
-        	layout		: 'form',
+            layout		: 'form',
             items		: [{
-            	html		: '<div class="google-analytics-summary">' + 
-            		'<div id="google-analytics-realtime"></div>' +
-            		'<div class="google-analytics-data">' + 
-            			'<strong>' + GoogleAnalytics.config.authorized_profile.url + '</strong>' +
-						'<span>' + GoogleAnalytics.config.authorized_profile.property_id + '</span>' + 
-					'</div>' + 
-            	'</div>' + 
-            	'<p>' + _('googleanalytics.stats_desc') + '</p>',
+                html		: '<div class="google-analytics-summary">' +
+					'<div id="google-analytics-realtime"></div>' +
+					'<div class="google-analytics-data">' +
+						'<strong>' + GoogleAnalytics.config.authorized_profile.url + '</strong>' +
+						'<span>' + GoogleAnalytics.config.authorized_profile.property_id + '</span>' +
+					'</div>' +
+				'</div>' +
+				'<p>' + _('googleanalytics.stats_desc') + '</p>',
                 bodyCssClass	: 'panel-desc google-analytics-description'
             }, {
-	        	xtype		: 'modx-vtabs',
-	            items		: this.getPanels()
-	        }]
+                xtype		: 'modx-vtabs',
+                items		: this.getPanels()
+            }]
         }],
         listeners	: {
 	        'afterrender' : {
@@ -49,16 +49,17 @@ Ext.extend(GoogleAnalytics.panel.Home, MODx.FormPanel, {
 			visitors		: 'googleanalytics-panel-visitors',
 			sources			: 'googleanalytics-panel-sources',
 			content			: 'googleanalytics-panel-content',
-			content_search	: 'googleanalytics-panel-content-search'
+			content_search	: 'googleanalytics-panel-content-search',
+            goals			: 'googleanalytics-panel-goals'
 		};
-		
-		Ext.each(MODx.config['googleanalytics.panels'].split(','), function(value) {
-			if (undefined !== (panel = availablePanels[value])) {
-				panels.push({
-					xtype : panel
+
+        for (var key in availablePanels) {
+        	if (-1 !== GoogleAnalytics.config.panels.indexOf(key)) {
+                panels.push({
+					xtype : availablePanels[key]
 				});
 			}
-		});
+        }
 		
 		return panels;
 	},
@@ -105,86 +106,24 @@ GoogleAnalytics.panel.Summary = function(config) {
 				history		: GoogleAnalytics.config.history
 			}) + '</h2>',
 			items		: [{
-	            xtype		: 'columnchart',
-	            url			: GoogleAnalytics.config.assets_url + 'swf/charts.swf',
-	            height		: 300,
-	            store		: new Ext.data.JsonStore({
-					url			: GoogleAnalytics.config.connector_url,
-					baseParams 	: {
-						action		: 'mgr/getdata',
-						profile		: GoogleAnalytics.config.authorized_profile.id,
-						data		: 'visits'
-					},
-					root		: 'results',
-					fields		: ['date', 'date_long', 'visits', 'pageviews'],
-					autoLoad	: true
-				}),
-	            xField		: 'date',
-	            chartStyle	: {
-	            	legend		: {
-	                	display		: 'bottom',
-	                    padding		: 5,
-	                    font		: {
-	                    	family		: 'Helvetica Neue',
-	                        size		: 12
-	                    }
-					},  
-	                dataTip		: {
-	                    padding		: 5,
-	                    border		: {
-	                        color		: '#99bbe8',
-	                        size		:2
-	                    },
-	                    background	: {
-	                        color		: '#ffffff',
-	                        alpha		: .9
-	                    },
-	                    font		: {
-	                        name		: 'Helvetica Neue',
-	                        color		: '#15428B',
-	                        size		: 11,
-	                        bold		: true
-	                    }
-	                },
-	                xAxis		: {
-	                    color		: '#e4e4e4',
-	                    majorGridLines : {
-	                    	size		: 1,
-	                    	color		: '#e4e4e4'
-	                    }
-	                },
-	                yAxis		: {
-	                    color		: '#e4e4e4',
-	                    majorGridLines : {
-	                    	size		: 1,
-	                    	color		: '#e4e4e4'
-	                    }
-	                }
-	            },
-	            series		: [{
-	                type		: 'line',
-	                style		: {
-	                    color		: '#0172ce',
-	                },
-	                yField		: 'pageviews',
-	                displayName	: _('googleanalytics.pageviews')
-	            }, {
-	                type		:'line',
-	                style		: {
-	                    color		: '#6cb1e8'
-	                },
-	                yField		: 'visits',
-	                displayName	: _('googleanalytics.visits')
-	                
-	            }],
-	            tipRenderer	: function(chart, record, index, series){
-	                return _('googleanalytics.' + series.yField + '_on', {
-	                    data		: record.data[series.yField],
-	                    date		: record.data.date,
-	                    date_long	: record.data.date_long
-	                });
-	            }
-	        }]
+        		xtype		: 'googleanalytics-line-chart',
+				height		: 300,
+				pieConfig	: {
+        			params		: {
+                        data		: 'visits'
+                    },
+                    fields		: ['date', 'date_short', 'date_long', 'visits', 'pageviews'],
+                    nameField	: 'date_long',
+                    dateField	: 'date',
+                    series		: [{
+	                    name		: _('googleanalytics.visitors'),
+	                	dateField	: 'visits'
+                    }, {
+        				name		: _('googleanalytics.pageviews'),
+						dateField	: 'pageviews'
+					}]
+				}
+			}]
         }, {			
 			xtype		: 'googleanalytics-panel-meta'
 		}]
@@ -209,109 +148,33 @@ GoogleAnalytics.panel.Visitors = function(config) {
 	        	columnWidth	: .5,
 	        	title		: '<h2>' + _('googleanalytics.title_block_visitors') + '</h2>',
 	        	items		: [{
-					xtype		: 'piechart',
-					url			: GoogleAnalytics.config.assets_url + 'swf/charts.swf',
-					height		: 200,
-					store		: new Ext.data.JsonStore({
-						url			: GoogleAnalytics.config.connector_url,
-						baseParams 	: {
-							action		: 'mgr/getdata',
-							profile		: GoogleAnalytics.config.authorized_profile.id,
-							data		: 'visiters'
-						},
-						root		: 'results',
-						fields		: ['visitorType', 'visits'],
-						autoLoad	: true
-					}),
-					dataField	: 'visits',
-					categoryField : 'visitorType',
-					series		: [{
-		            	style		: {
-		                	colors		: ['#058dc7', '#6cb1e8', '#50b432', '#ed561b', '#edef00', '#24cbe5', '#cccccc']
-		                }
-		            }],
-		            extraStyle	: {
-			        	legend		: {
-			            	display		: 'right',
-		                    padding		: 5,
-		                    font		: {
-		                    	family		: 'Helvetica Neue',
-		                        size		: 12
-		                    }
-			            },
-			            dataTip		: {
-		                    padding		: 5,
-		                    border		: {
-		                        color		: '#99bbe8',
-		                        size		:2
-		                    },
-		                    background	: {
-		                        color		: '#ffffff',
-		                        alpha		: .9
-		                    },
-		                    font		: {
-		                        name		: 'Helvetica Neue',
-		                        color		: '#15428B',
-		                        size		: 11,
-		                        bold		: true
-		                    }
-		                }
-			        }
+	        		xtype		: 'googleanalytics-pie-chart',
+					height		: 250,
+					pieConfig	: {
+	        			params		: {
+                            data		: 'visiters'
+                        },
+                        fields		: ['visitorType', 'visits'],
+                        nameField	: 'visitorType',
+                        dataField	: 'visits'
+					}
 				}]
 	        }, {
 		        columnWidth	: .5,
 		        title		: '<h2>' + _('googleanalytics.title_block_language') + '</h2>',
 		        style		: 'margin-right: 0;',
 		        items		: [{
-					xtype		: 'piechart',
-					url			: GoogleAnalytics.config.assets_url + 'swf/charts.swf',
-					height		: 200,
-					store		: new Ext.data.JsonStore({
-						url			: GoogleAnalytics.config.connector_url,
-						baseParams 	: {
-							action		: 'mgr/getdata',
-							profile		: GoogleAnalytics.config.authorized_profile.id,
-							data		: 'language'
-						},
-						root		: 'results',
-						fields		: ['language', 'visits', 'visitors', 'pageviews'],
-						autoLoad	: true
-					}),
-					dataField	: 'visitors',
-					categoryField : 'language',
-					series		: [{
-		            	style		: {
-		                	colors		: ['#058dc7', '#6cb1e8', '#50b432', '#ed561b', '#edef00', '#24cbe5', '#cccccc']
-		                }
-		            }],
-		            extraStyle	: {
-			        	legend		: {
-			            	display		: 'right',
-		                    padding		: 5,
-		                    font		: {
-		                    	family		: 'Helvetica Neue',
-		                        size		: 12
-		                    }
-			            },
-			            dataTip		: {
-		                    padding		: 5,
-		                    border		: {
-		                        color		: '#99bbe8',
-		                        size		:2
-		                    },
-		                    background	: {
-		                        color		: '#ffffff',
-		                        alpha		: .9
-		                    },
-		                    font		: {
-		                        name		: 'Helvetica Neue',
-		                        color		: '#15428B',
-		                        size		: 11,
-		                        bold		: true
-		                    }
-		                }
-			        }
-				}]	
+	        		xtype		: 'googleanalytics-pie-chart',
+					height		: 250,
+					pieConfig	: {
+	        			params		: {
+                            data		: 'language'
+                        },
+                        fields		: ['language', 'visits', 'visitors', 'pageviews'],
+                        nameField	: 'language',
+                        dataField	: 'visitors'
+					}
+				}]
 		    }]
 	    }, {			
 			xtype		: 'panel',
@@ -340,109 +203,33 @@ GoogleAnalytics.panel.Sources = function(config) {
         	items		: [{
 	        	columnWidth	: .5,
 	        	title		: '<h2>' + _('googleanalytics.title_block_sources') + '</h2>',
-	        	items		: [{
-					xtype		: 'piechart',
-					url			: GoogleAnalytics.config.assets_url + 'swf/charts.swf',
-					height		: 200,
-					store		: new Ext.data.JsonStore({
-						url			: GoogleAnalytics.config.connector_url,
-						baseParams 	: {
-							action		: 'mgr/getdata',
-							profile		: GoogleAnalytics.config.authorized_profile.id,
-							data		: 'sources-summary'
-						},
-						root		: 'results',
-						fields		: ['name', 'visits'],
-						autoLoad	: true
-					}),
-					dataField	: 'visits',
-					categoryField : 'name',
-					series		: [{
-		            	style		: {
-		                	colors		: ['#058dc7', '#6cb1e8', '#50b432', '#ed561b', '#edef00', '#24cbe5', '#cccccc']
-		                }
-		            }],
-		            extraStyle	: {
-			        	legend		: {
-			            	display		: 'right',
-		                    padding		: 5,
-		                    font		: {
-		                    	family		: 'Helvetica Neue',
-		                        size		: 12
-		                    }
-			            },
-			            dataTip		: {
-		                    padding		: 5,
-		                    border		: {
-		                        color		: '#99bbe8',
-		                        size		:2
-		                    },
-		                    background	: {
-		                        color		: '#ffffff',
-		                        alpha		: .9
-		                    },
-		                    font		: {
-		                        name		: 'Helvetica Neue',
-		                        color		: '#15428B',
-		                        size		: 11,
-		                        bold		: true
-		                    }
-		                }
-			        }
+				items		: [{
+	        		xtype		: 'googleanalytics-pie-chart',
+					height		: 250,
+					pieConfig	: {
+	        			params		: {
+                            data		: 'sources-summary'
+                        },
+                        fields		: ['name', 'visits'],
+                        nameField	: 'name',
+                        dataField	: 'visits'
+					}
 				}]
 	        }, {
 		        columnWidth	: .5,
 		        title		: '<h2>' + _('googleanalytics.title_block_devices') + '</h2>',
 		        style		: 'margin-right: 0;',
 		        items		: [{
-					xtype		: 'piechart',
-					url			: GoogleAnalytics.config.assets_url + 'swf/charts.swf',
-					height		: 200,
-					store		: new Ext.data.JsonStore({
-						url			: GoogleAnalytics.config.connector_url,
-						baseParams 	: {
-							action		: 'mgr/getdata',
-							profile		: GoogleAnalytics.config.authorized_profile.id,
-							data		: 'devices'
-						},
-						root		: 'results',
-						fields		: ['deviceCategory', 'visits'],
-						autoLoad	: true
-					}),
-					dataField	: 'visits',
-					categoryField : 'deviceCategory',
-					series		: [{
-		            	style		: {
-		                	colors		: ['#058dc7', '#6cb1e8', '#50b432', '#ed561b', '#edef00', '#24cbe5', '#cccccc']
-		                }
-		            }],
-		            extraStyle	: {
-			        	legend		: {
-			            	display		: 'right',
-		                    padding		: 5,
-		                    font		: {
-		                    	family		: 'Helvetica Neue',
-		                        size		: 12
-		                    }
-			            },
-			            dataTip		: {
-		                    padding		: 5,
-		                    border		: {
-		                        color		: '#99bbe8',
-		                        size		:2
-		                    },
-		                    background	: {
-		                        color		: '#ffffff',
-		                        alpha		: .9
-		                    },
-		                    font		: {
-		                        name		: 'Helvetica Neue',
-		                        color		: '#15428B',
-		                        size		: 11,
-		                        bold		: true
-		                    }
-		                }
-			        }
+	        		xtype		: 'googleanalytics-pie-chart',
+					height		: 250,
+					pieConfig	: {
+	        			params		: {
+                            data		: 'devices'
+                        },
+                        fields		: ['deviceCategory', 'visits'],
+                        nameField	: 'deviceCategory',
+                        dataField	: 'visits'
+					}
 				}]
 	        }]	
 	    }, {			
@@ -510,6 +297,27 @@ GoogleAnalytics.panel.ContentSearch = function(config) {
 Ext.extend(GoogleAnalytics.panel.ContentSearch, MODx.Panel);
 
 Ext.reg('googleanalytics-panel-content-search', GoogleAnalytics.panel.ContentSearch);
+
+GoogleAnalytics.panel.Goals = function(config) {
+    config = config || {};
+
+    Ext.apply(config, {
+        title		:  _('googleanalytics.title_goals'),
+        items		: [{
+            xtype		: 'panel',
+            title		: '<h2>' + _('googleanalytics.title_block_goals') + '</h2>',
+            items		: [{
+                xtype		: 'googleanalytics-grid-goals'
+            }]
+        }]
+    });
+
+    GoogleAnalytics.panel.Goals.superclass.constructor.call(this, config);
+};
+
+Ext.extend(GoogleAnalytics.panel.Goals, MODx.Panel);
+
+Ext.reg('googleanalytics-panel-goals', GoogleAnalytics.panel.Goals);
 
 GoogleAnalytics.panel.Meta = function(config) {
     config = config || {};   

@@ -3,7 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2017 by Oene Tjeerd de Bruin <modx@oetzie.nl>
+	 * Copyright 2017 by Oene Tjeerd de Bruin <oenetjeerd@sterc.nl>
 	 *
 	 * Google Analytics is free software; you can redistribute it and/or modify it under
 	 * the terms of the GNU General Public License as published by the Free Software

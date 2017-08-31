@@ -19,7 +19,7 @@
 	 * Suite 330, Boston, MA 02111-1307 USA
 	 */
 
-	class GoogleAnalyticsSettingsSaveProcessor extends modProcessor {
+	class GoogleAnalyticsSettingsRevokeAuthProcessor extends modProcessor {
 		/**
 		 * @access public.
 		 * @var Object.
@@ -38,45 +38,38 @@
 
 		/**
 		 * @access public.
-		 * @return Mixed.
+         * @param String $code.
+		 * @return Array|Boolean.
 		 */
 		public function process() {
             $this->modx->getCacheManager()->clearCache();
 
-            if (null !== ($object = $this->modx->getObject('modSystemSetting', 'googleanalytics.history'))) {
+            if (null !== ($object = $this->modx->getObject('modSystemSetting', 'googleanalytics.account'))) {
                 $object->fromArray(array(
-                    'value'	=> $this->getProperty('history')
+                    'value' => ''
                 ));
 
                 $object->save();
             }
 
-            if (null !== ($object = $this->modx->getObject('modSystemSetting', 'googleanalytics.panels'))) {
+            if (null !== ($object = $this->modx->getObject('modSystemSetting', 'googleanalytics.refresh_token'))) {
                 $object->fromArray(array(
-                    'value'	=> implode(',', $this->getProperty('panels'))
+                    'value' => ''
                 ));
 
-                $object->save();
+                if ($object->save()) {
+                    $this->modx->getCacheManager()->delete('access_token', array(
+                        xPDO::OPT_CACHE_KEY => 'googleanalytics'
+                    ));
+
+                    return $this->success();
+                }
             }
 
-			if (null !== ($object = $this->modx->getObject('modSystemSetting', 'googleanalytics.account'))) {
-				$object->fromArray(array(
-					'value'	=> $this->modx->toJSON(array(
-						'account'	=> $this->getProperty('account'),
-						'property'	=> $this->getProperty('property'),
-						'profile'	=> $this->getProperty('profile')	
-					))
-				));
-				
-				if ($object->save()) {
-					return $this->success();
-				}
-			}
-			
-			return $this->failure();
+            return $this->failure();
 		}
 	}
 
-	return 'GoogleAnalyticsSettingsSaveProcessor';
+	return 'GoogleAnalyticsSettingsRevokeAuthProcessor';
 
 ?>

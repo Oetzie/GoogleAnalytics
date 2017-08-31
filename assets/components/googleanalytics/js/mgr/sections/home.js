@@ -6,15 +6,15 @@ GoogleAnalytics.page.Home = function(config) {
 	config = config || {};
 	
 	config.buttons = [];
-	
-	if (GoogleAnalytics.config.branding) {
+
+	if (GoogleAnalytics.config.branding_url) {
 		config.buttons.push({
 			text 		: 'GoogleAnalytics ' + GoogleAnalytics.config.version,
 			cls			: 'x-btn-branding',
 			handler		: this.loadBranding
 		});
 	}
-	
+
 	if (GoogleAnalytics.config.authorized_profile) {
 		config.buttons.push({
 			xtype 		: 'googleanalytics-combo-profiles',
@@ -44,17 +44,30 @@ GoogleAnalytics.page.Home = function(config) {
 	});
 	
 	if (GoogleAnalytics.config.has_permission) {
-		config.buttons.push({
-			text 		: _('googleanalytics.settings'),
-			handler		: this.updateSettings
-		});
+        if (GoogleAnalytics.config.authorized) {
+            config.buttons.push({
+				text   	: _('googleanalytics.settings'),
+				handler	: this.updateSettings
+			}, {
+                text	: _('googleanalytics.auth_revoke'),
+                handler	: this.revokeAuth,
+                scope	: this
+            });
+        } else {
+            config.buttons.push({
+				text   	: _('googleanalytics.auth'),
+				handler	: this.updateAuth
+			});
+        }
 	}
-	
-	config.buttons.push({
-		text		: _('help_ex'),
-		handler		: MODx.loadHelpPane,
-		scope		: this
-	});
+
+    if (GoogleAnalytics.config.branding_url_help) {
+        config.buttons.push({
+            text   : _('help_ex'),
+            handler: MODx.loadHelpPane,
+            scope  : this
+        });
+    }
 	
 	if (GoogleAnalytics.config.authorized_profile) {
 		Ext.applyIf(config, {
@@ -91,6 +104,45 @@ Ext.extend(GoogleAnalytics.page.Home, MODx.Component, {
         
         MODx.loadPage('?' + Ext.urlEncode(request));
 	},
+    updateAuth: function(btn, e) {
+        if (this.updateAuthWindow) {
+            this.updateAuthWindow.destroy();
+        }
+
+        this.updateAuthWindow = MODx.load({
+			modal		: true,
+			xtype		: 'googleanalytics-window-auth-update',
+			closeAction	: 'close',
+			listeners	: {
+				'success'	: {
+					fn			: function() {
+						window.location.reload();
+					},
+					scope		: this
+				}
+			}
+		});
+
+        this.updateAuthWindow.show(e.target);
+	},
+    revokeAuth : function(btn, e) {
+        MODx.msg.confirm({
+			title 		: _('googleanalytics.auth_revoke'),
+			text		: _('googleanalytics.auth_revoke_confirm'),
+			url			: GoogleAnalytics.config.connector_url,
+			params		: {
+				action		: 'mgr/settings/revokeauth',
+			},
+			listeners	: {
+				'success'	: {
+                    fn			: function() {
+                        window.location.reload();
+                    },
+                    scope		: this
+				}
+			}
+		});
+    },
 	updateSettings: function(btn, e) {
         if (this.updateSettingsWindow) {
 	        this.updateSettingsWindow.destroy();
@@ -116,10 +168,52 @@ Ext.extend(GoogleAnalytics.page.Home, MODx.Component, {
 
 Ext.reg('googleanalytics-page-home', GoogleAnalytics.page.Home);
 
+GoogleAnalytics.window.UpdateAuth = function(config) {
+    config = config || {};
+
+    Ext.applyIf(config, {
+        autoHeight	: true,
+        title 		: _('googleanalytics.auth'),
+        url			: GoogleAnalytics.config.connector_url,
+        baseParams	: {
+            action		: 'mgr/settings/auth'
+        },
+        fields		: [{
+            xtype       : 'textfield',
+            fieldLabel  : _('googleanalytics.label_code'),
+            description : MODx.expandHelp ? '' : _('googleanalytics.label_code_desc'),
+            name        : 'code',
+            anchor      : '100%'
+        }, {
+            xtype       : MODx.expandHelp ? 'label' : 'hidden',
+            html        : _('googleanalytics.label_code_desc'),
+            cls         : 'desc-under'
+        }, {
+            xtype		: 'button',
+            text		: _('googleanalytics.auth_code'),
+            anchor		: '100%',
+            handler		: this.getAuthorizePopup,
+            scope		: this
+        }],
+        saveBtnText	: _('googleanalytics.auth')
+    });
+
+    GoogleAnalytics.window.UpdateAuth.superclass.constructor.call(this, config);
+};
+
+Ext.extend(GoogleAnalytics.window.UpdateAuth, MODx.Window, {
+    getAuthorizePopup : function() {
+        window.open(GoogleAnalytics.config.authorize_url, 'googleanalytics_authorize', 'height=500,width=450');
+    }
+});
+
+Ext.reg('googleanalytics-window-auth-update', GoogleAnalytics.window.UpdateAuth)
+
 GoogleAnalytics.window.UpdateSettings = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
+    	width		: 600,
     	autoHeight	: true,
         title 		: _('googleanalytics.settings'),
         url			: GoogleAnalytics.config.connector_url,
@@ -127,54 +221,113 @@ GoogleAnalytics.window.UpdateSettings = function(config) {
             action		: 'mgr/settings/save'
         },
         fields		: [{
-	        xtype		: 'googleanalytics-combo-accounts',
-	        fieldLabel	: _('googleanalytics.label_account'),
-	        description	: MODx.expandHelp ? '' : _('googleanalytics.label_account_desc'),
-	        id			: 'google-analytics-setting-account',
-        	name		: 'account',
-        	anchor		: '100%',
-        	value		: null,
-        	listeners	: {
-	        	'change'	: {
-		        	fn			: this.unLockPropertyField,
-		        	scope		: this
-	        	}
-        	}
-	    }, {
-        	xtype		: MODx.expandHelp ? 'label' : 'hidden',
-            html		: _('googleanalytics.label_account_desc'),
-            cls			: 'desc-under'
-        }, {
-	        xtype		: 'googleanalytics-combo-properties',
-	        fieldLabel	: _('googleanalytics.label_property'),
-	        description	: MODx.expandHelp ? '' : _('googleanalytics.label_property_desc'),
-	        id			: 'google-analytics-setting-property',
-        	name		: 'property',
-        	anchor		: '100%',
-        	value		: null,
-        	listeners	: {
-	        	'change'	: {
-		        	fn			: this.unLockProfileField,
-		        	scope		: this
-	        	}
-        	}
-	    }, {
-        	xtype		: MODx.expandHelp ? 'label' : 'hidden',
-            html		: _('googleanalytics.label_property_desc'),
-            cls			: 'desc-under'
-        }, {
-	        xtype		: 'googleanalytics-combo-profiles',
-	        fieldLabel	: _('googleanalytics.label_profile'),
-	        description	: MODx.expandHelp ? '' : _('googleanalytics.label_profile_desc'),
-	        id			: 'google-analytics-setting-profile',
-        	name		: 'profile',
-        	anchor		: '100%',
-        	value		: null
-	    }, {
-        	xtype		: MODx.expandHelp ? 'label' : 'hidden',
-            html		: _('googleanalytics.label_profile_desc'),
-            cls			: 'desc-under'
-        }]
+            layout		: 'column',
+            border		: false,
+            defaults	: {
+                layout		: 'form',
+                labelSeparator : ''
+            },
+            items		: [{
+                columnWidth	: .5,
+                items		: [{
+                    xtype		: 'googleanalytics-combo-accounts',
+                    fieldLabel	: _('googleanalytics.label_account'),
+                    description	: MODx.expandHelp ? '' : _('googleanalytics.label_account_desc'),
+                    id			: 'google-analytics-setting-account',
+                    name		: 'account',
+                    anchor		: '100%',
+                    listeners	: {
+                        'change'	: {
+                            fn			: this.unLockPropertyField,
+                            scope		: this
+                        }
+                    }
+                }, {
+                    xtype		: MODx.expandHelp ? 'label' : 'hidden',
+                    html		: _('googleanalytics.label_account_desc'),
+                    cls			: 'desc-under'
+                }, {
+                    xtype		: 'googleanalytics-combo-properties',
+                    fieldLabel	: _('googleanalytics.label_property'),
+                    description	: MODx.expandHelp ? '' : _('googleanalytics.label_property_desc'),
+                    id			: 'google-analytics-setting-property',
+                    name		: 'property',
+                    anchor		: '100%',
+                    listeners	: {
+                        'change'	: {
+                            fn			: this.unLockProfileField,
+                            scope		: this
+                        }
+                    }
+                }, {
+                    xtype		: MODx.expandHelp ? 'label' : 'hidden',
+                    html		: _('googleanalytics.label_property_desc'),
+                    cls			: 'desc-under'
+                }, {
+                    xtype		: 'googleanalytics-combo-profiles',
+                    fieldLabel	: _('googleanalytics.label_profile'),
+                    description	: MODx.expandHelp ? '' : _('googleanalytics.label_profile_desc'),
+                    id			: 'google-analytics-setting-profile',
+                    name		: 'profile',
+                    anchor		: '100%'
+                }, {
+                    xtype		: MODx.expandHelp ? 'label' : 'hidden',
+                    html		: _('googleanalytics.label_profile_desc'),
+                    cls			: 'desc-under'
+                }]
+            }, {
+                columnWidth	: .5,
+                style      	: 'margin-right: 0;',
+                items      	: [{
+                    xtype		: 'googleanalytics-combo-history',
+                    fieldLabel	: _('googleanalytics.label_history'),
+                    description	: MODx.expandHelp ? '' : _('googleanalytics.label_history_desc'),
+                    name		: 'history',
+                    anchor		: '100%',
+                    value		: GoogleAnalytics.config.history
+                }, {
+                    xtype		: MODx.expandHelp ? 'label' : 'hidden',
+                    html		: _('googleanalytics.label_history_desc'),
+                    cls			: 'desc-under'
+                }, {
+                    xtype		: 'checkboxgroup',
+                    fieldLabel	: _('googleanalytics.label_panels'),
+                    columns		: 2,
+                    vertical	: false,
+                    items		: [{
+                        boxLabel	: _('googleanalytics.title_summary'),
+                        inputValue	: 'summary',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('summary')
+                    }, {
+                        boxLabel	: _('googleanalytics.title_visitors'),
+                        inputValue	: 'visitors',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('visitors')
+                    }, {
+                        boxLabel	: _('googleanalytics.title_sources'),
+                        inputValue	: 'sources',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('sources')
+                    }, {
+                        boxLabel	: _('googleanalytics.title_content'),
+                        inputValue	: 'content',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('content')
+                    }, {
+                        boxLabel	: _('googleanalytics.title_content_search'),
+                        inputValue  : 'content_search',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('content_search')
+                    }, {
+                        boxLabel	: _('googleanalytics.title_goals'),
+                        inputValue  : 'goals',
+                        name		: 'panels[]',
+                        checked		: -1 != GoogleAnalytics.config.panels.indexOf('goals')
+                    }]
+                }]
+            }]
+		}]
     });
     
     GoogleAnalytics.window.UpdateSettings.superclass.constructor.call(this, config);
@@ -279,6 +432,35 @@ GoogleAnalytics.combo.Profiles = function(config) {
 Ext.extend(GoogleAnalytics.combo.Profiles, MODx.combo.ComboBox);
 
 Ext.reg('googleanalytics-combo-profiles', GoogleAnalytics.combo.Profiles);
+
+GoogleAnalytics.combo.History = function(config) {
+    config = config || {};
+
+    Ext.applyIf(config, {
+        store: new Ext.data.ArrayStore({
+			mode	: 'local',
+			fields	: ['type','label'],
+			data	: [
+				[7, _('googleanalytics.history_1')],
+				[14, _('googleanalytics.history_2')],
+				[21, _('googleanalytics.history_3')],
+                [28, _('googleanalytics.history_4')]
+			]
+		}),
+        remoteSort	: ['label', 'asc'],
+        hiddenName	: 'history',
+        valueField	: 'label',
+        displayField: 'label',
+        mode		: 'local',
+        value		: 14
+    });
+
+    GoogleAnalytics.combo.History.superclass.constructor.call(this,config);
+};
+
+Ext.extend(GoogleAnalytics.combo.History, MODx.combo.ComboBox);
+
+Ext.reg('googleanalytics-combo-history', GoogleAnalytics.combo.History);
 
 /*GoogleAnalytics.combo.PropertiesGrouped = function(config) {
     config = config || {};

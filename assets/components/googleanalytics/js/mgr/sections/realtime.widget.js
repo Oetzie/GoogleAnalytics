@@ -23,7 +23,7 @@ GoogleAnalytics.panel.WidgetRealTime = function(config) {
 	GoogleAnalytics.panel.WidgetRealTime.superclass.constructor.call(this, config);
 };
 
-Ext.extend(GoogleAnalytics.panel.WidgetRealTime, MODx.FormPanel, {
+Ext.extend(GoogleAnalytics.panel.WidgetRealTime, MODx.Panel, {
 	setRealTimeData: function() {
 		MODx.Ajax.request({
             url			: GoogleAnalytics.config.connector_url,

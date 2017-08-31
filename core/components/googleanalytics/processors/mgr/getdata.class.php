@@ -3,7 +3,7 @@
 	/**
 	 * Google Analytics
 	 *
-	 * Copyright 2017 by Oene Tjeerd de Bruin <modx@oetzie.nl>
+	 * Copyright 2017 by Oene Tjeerd de Bruin <oenetjeerd@sterc.nl>
 	 *
 	 * Google Analytics is free software; you can redistribute it and/or modify it under
 	 * the terms of the GNU General Public License as published by the Free Software
@@ -67,7 +67,7 @@
 			}
 			
 			if (!empty($type)) {
-				if ((bool) $this->getProperty('cache')) {
+				if ((bool) $this->getProperty('cache') && 'realtime' != $type) {
 					if (null !== ($data = $this->getCache())) {
 						$output = $data;
 					} else {
@@ -119,17 +119,21 @@
 		 * @return Array.
 		 */
 		public function getCacheOptions($option = null) {
-			$options = array(
-				xPDO::OPT_CACHE_KEY 	=> 'googleanalytics/'.$this->googleanalytics->config['authorized_profile']['id'].'/'.$this->getProperty('data'),
-				xPDO::OPT_CACHE_HANDLER => $this->modx->getOption(xPDO::OPT_CACHE_HANDLER, null, 'xPDOFileCache'),
-				xPDO::OPT_CACHE_EXPIRES => 3600
-			);
-			
-			if (isset($options[$option])) {
-				return $options[$option];
-			}
-			
-			return $options;
+		    if ($profile = $this->googleanalytics->getAuthorizedProfile()) {
+                $options = array(
+                    xPDO::OPT_CACHE_KEY 	=> 'googleanalytics/'.$profile['id'].'/'.$this->getProperty('data'),
+                    xPDO::OPT_CACHE_HANDLER => $this->modx->getOption(xPDO::OPT_CACHE_HANDLER, null, 'xPDOFileCache'),
+                    xPDO::OPT_CACHE_EXPIRES => 3600
+                );
+
+                if (isset($options[$option])) {
+                    return $options[$option];
+                }
+
+                return $options;
+            }
+
+			return false;
 		}
 	}
 

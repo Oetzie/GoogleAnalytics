@@ -7,7 +7,8 @@ GoogleAnalytics.grid.Visitors = function(config) {
             dataIndex	: 'date',
             sortable	: true,
             editable	: false,
-            width		: 125
+            width		: 125,
+            renderer    : this.renderDate
         }, {
             header		: _('googleanalytics.visits'),
             dataIndex	: 'visits',
@@ -31,7 +32,7 @@ GoogleAnalytics.grid.Visitors = function(config) {
             width		: 125
         }, {
             header		: _('googleanalytics.visitors_time'),
-            dataIndex	: 'avgTimeOnSite',
+            dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
             fixed		: true,
@@ -63,7 +64,7 @@ GoogleAnalytics.grid.Visitors = function(config) {
 			profile		: GoogleAnalytics.config.authorized_profile.id,
 			data		: 'visits'
 		},
-		fields		: ['date', 'visits', 'visitors', 'pageviews', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+		fields		: ['date', 'date_short', 'date_long', 'visits', 'visitors', 'pageviews', 'pageviewsPerVisit', 'avgSessionDuration', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         sortBy		: 'date'
     });
@@ -72,6 +73,9 @@ GoogleAnalytics.grid.Visitors = function(config) {
 };
 
 Ext.extend(GoogleAnalytics.grid.Visitors, MODx.grid.Grid, {
+    renderDate: function(d, c, e) {
+        return e.data.date_long;
+    },
 	renderPercent: function(d, c) {
 		var percent = Ext.util.Format.number(d, '0,0') + '%';
 		
@@ -113,7 +117,7 @@ GoogleAnalytics.grid.Sources = function(config) {
             width		: 125
         }, {
             header		: _('googleanalytics.visitors_time'),
-            dataIndex	: 'avgTimeOnSite',
+            dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
             fixed		: true,
@@ -145,7 +149,7 @@ GoogleAnalytics.grid.Sources = function(config) {
 			profile		: GoogleAnalytics.config.authorized_profile.id,
 			data		: 'sources'
 		},
-		fields		: ['source', 'visits', 'visitors', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+		fields		: ['source', 'visits', 'visitors', 'pageviewsPerVisit', 'avgSessionDuration', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         sortBy		: 'visits'
     });
@@ -188,7 +192,8 @@ GoogleAnalytics.grid.ContentHigh = function(config) {
             dataIndex	: 'pagePath',
             sortable	: true,
             editable	: false,
-            width		: 125
+            width		: 125,
+            renderer    : this.renderUrl
         }, {
             header		: _('googleanalytics.entrances'),
             dataIndex	: 'entrances',
@@ -232,6 +237,9 @@ GoogleAnalytics.grid.ContentHigh = function(config) {
 };
 
 Ext.extend(GoogleAnalytics.grid.ContentHigh, MODx.grid.Grid, {
+    renderUrl: function(d, c) {
+        return String.format('<a href="{0}" target="_blank">{1}</a>', GoogleAnalytics.config.authorized_profile.url + d, d);
+    },
 	renderPercent: function(d, c) {
     	var percent = Ext.util.Format.number(d, '0,0') + '%';
 		
@@ -255,7 +263,8 @@ GoogleAnalytics.grid.ContentLow = function(config) {
             dataIndex	: 'pagePath',
             sortable	: true,
             editable	: false,
-            width		: 125
+            width		: 125,
+            renderer    : this.renderUrl
         }, {
             header		: _('googleanalytics.exits'),
             dataIndex	: 'exits',
@@ -299,6 +308,9 @@ GoogleAnalytics.grid.ContentLow = function(config) {
 };
 
 Ext.extend(GoogleAnalytics.grid.ContentLow, MODx.grid.Grid, {
+    renderUrl: function(d, c) {
+        return String.format('<a href="{0}" target="_blank">{1}</a>', GoogleAnalytics.config.authorized_profile.url + d, d);
+    },
 	renderPercent: function(d, c) {
     	var percent = Ext.util.Format.number(d, '0,0') + '%';
 		
@@ -340,7 +352,7 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
             renderer	: this.renderPercent
         }, {
             header		: _('googleanalytics.visitors_time'),
-            dataIndex	: 'avgTimeOnSite',
+            dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
             fixed		: true,
@@ -373,7 +385,7 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
 			profile		: GoogleAnalytics.config.authorized_profile.id,
 			data		: 'content-search'
 		},
-		fields		: ['keyword', 'visits', 'pageviewsPerVisit', 'avgTimeOnSite', 'percentNewVisits', 'visitBounceRate'],
+		fields		: ['keyword', 'visits', 'pageviewsPerVisit', 'avgSessionDuration', 'percentNewVisits', 'visitBounceRate'],
         paging		: false,
         pageSize	: 15,
         sortBy		: 'visits'
@@ -396,3 +408,66 @@ Ext.extend(GoogleAnalytics.grid.ContentSearch, MODx.grid.Grid, {
 });
 
 Ext.reg('googleanalytics-grid-content-search', GoogleAnalytics.grid.ContentSearch);
+
+GoogleAnalytics.grid.Goals = function(config) {
+    config = config || {};
+
+    columns = new Ext.grid.ColumnModel({
+        columns: [{
+            header		: _('googleanalytics.location'),
+            dataIndex	: 'goalCompletionLocation',
+            sortable	: true,
+            editable	: false,
+            width		: 125,
+            renderer    : this.renderUrl
+        }, {
+            header		: _('googleanalytics.goal'),
+            dataIndex	: 'goalCompletionsAll',
+            sortable	: true,
+            editable	: false,
+            fixed		: true,
+            width		: 125
+        }, {
+            header		: _('googleanalytics.goal'),
+            dataIndex	: 'goalCompletionsAllPercent',
+            sortable	: true,
+            editable	: false,
+            fixed		: true,
+            width		: 125,
+            renderer	: this.renderPercent
+        }]
+    });
+
+    Ext.applyIf(config, {
+        cm			: columns,
+        url			: GoogleAnalytics.config.connector_url,
+        baseParams 	: {
+            action		: 'mgr/getdata',
+            profile		: GoogleAnalytics.config.authorized_profile.id,
+            data		: 'goals'
+        },
+        fields		: ['goalCompletionLocation', 'goalStartsAll', 'goalStartsAllPercent', 'goalCompletionsAll', 'goalCompletionsAllPercent'],
+        paging		: false,
+        sortBy		: 'goalCompletionsAll'
+    });
+
+    GoogleAnalytics.grid.Goals.superclass.constructor.call(this, config);
+};
+
+Ext.extend(GoogleAnalytics.grid.Goals, MODx.grid.Grid, {
+    renderUrl: function(d, c) {
+        return String.format('<a href="{0}" target="_blank">{1}</a>', GoogleAnalytics.config.authorized_profile.url + d, d);
+    },
+    renderPercent: function(d, c) {
+        var percent = Ext.util.Format.number(d, '0,0') + '%';
+
+        return String.format('<div class="google-analytics-percent">' +
+            '<span class="google-analytics-percent-wrapper">' +
+                '<span class="google-analytics-percent-bar" style="width: {0};"></span>' +
+                '<span class="google-abalytics-percent-value">{1}</span>' +
+            '</span>' +
+        '</div>', percent, percent);
+    }
+});
+
+Ext.reg('googleanalytics-grid-goals', GoogleAnalytics.grid.Goals);
