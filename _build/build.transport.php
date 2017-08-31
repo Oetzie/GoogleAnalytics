@@ -11,7 +11,7 @@
 	define('PKG_VERSION',		'2.0.1');
 	define('PKG_RELEASE',		'pl');
 	
-	define('PRIVATE_PATH',		dirname(dirname(dirname(dirname(__FILE__)))).'/private_html/rtfm/');
+	define('PRIVATE_PATH',		dirname(dirname(dirname(__FILE__))).'/private_html/');
 	define('PUBLIC_PATH',		dirname(dirname(__FILE__)).'/');
 
 	$sources = array(
