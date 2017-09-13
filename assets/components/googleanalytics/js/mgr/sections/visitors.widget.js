@@ -25,7 +25,14 @@ GoogleAnalytics.panel.WidgetVisitors = function(config) {
 					dateField	: 'pageviews'
 				}]
 			}
-		}]
+		}],
+		buttons 	: [{
+            text   		: _('googleanalytics.view_more'),
+            cls    		: 'primary-button',
+            handler		: function () {
+                MODx.loadPage(MODx.action['googleanalytics:index'], 'namespace=' + GoogleAnalytics.config.namespace);
+            }
+        }]
 	});
 	
 	GoogleAnalytics.panel.WidgetVisitors.superclass.constructor.call(this, config);

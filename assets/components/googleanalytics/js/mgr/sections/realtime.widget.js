@@ -7,7 +7,16 @@ GoogleAnalytics.panel.WidgetRealTime = function(config) {
 	
 	Ext.applyIf(config, {
 		renderTo	: 'googleanalytics-widget-realtime-div',
-		id			: 'google-analytics-realtime',
+		items		: [{
+			id			: 'google-analytics-realtime'
+		}],
+		buttons 	: [{
+            text   		: _('googleanalytics.view_more'),
+            cls    		: 'primary-button',
+            handler		: function () {
+                MODx.loadPage(MODx.action['googleanalytics:index'], 'namespace=' + GoogleAnalytics.config.namespace);
+            }
+        }],
 		listeners	: {
 	        'afterrender' : {
 		        fn 		: function() {

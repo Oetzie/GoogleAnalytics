@@ -80,7 +80,7 @@
 	$_lang['googleanalytics.title_visitors']				    = 'Visitors';
 	$_lang['googleanalytics.title_sources']					    = 'Traffic sources';
 	$_lang['googleanalytics.title_content']					    = 'Content';
-	$_lang['googleanalytics.title_content_search']			    = 'Searchqueries';
+	$_lang['googleanalytics.title_content_search']			    = 'Search';
     $_lang['googleanalytics.title_goals']				        = 'Goals';
 	$_lang['googleanalytics.title_block_summary']			    = 'Stats last [[+history]] days';
 	$_lang['googleanalytics.title_block_meta']				    = 'Stats compared last [[+history]] days';
@@ -99,7 +99,7 @@
 	$_lang['googleanalytics.visitors']						    = 'Visitors';
 	$_lang['googleanalytics.visitors_on']					    = '[[+data]] visitors at [[+date_long]]';
 	$_lang['googleanalytics.visitors_time']					    = 'Time on site';
-	$_lang['googleanalytics.pageviews']						    = 'Pagesviews';
+	$_lang['googleanalytics.pageviews']						    = 'Pageviews';
 	$_lang['googleanalytics.pageviews_on']					    = '[[+data]] pageviews at [[+date_long]]';
 	$_lang['googleanalytics.pageviews_unique']				    = 'Unique pageviews';
 	$_lang['googleanalytics.new_visitor']					    = 'New';
@@ -107,7 +107,7 @@
 	$_lang['googleanalytics.bounces']						    = 'Bounces';
 	$_lang['googleanalytics.bouncerate']					    = 'Bouncerate';
 	$_lang['googleanalytics.tablet']						    = 'Tablet';
-	$_lang['googleanalytics.mobile']						    = 'Mobiel';
+	$_lang['googleanalytics.mobile']						    = 'Mobile';
 	$_lang['googleanalytics.desktop']						    = 'Desktop';
 	$_lang['googleanalytics.source']						    = 'Source';
 	$_lang['googleanalytics.source_search']					    = 'Search engine';
@@ -127,5 +127,6 @@
     $_lang['googleanalytics.history_4']                         = '28 days';
     $_lang['googleanalytics.auth_error']                        = 'An error has occurred while authorizing, please try again.';
     $_lang['googleanalytics.auth_error_save']                   = 'An error has occurred while saving the authorization token, please try again.';
-
+	$_lang['googleanalytics.view_more']							= 'View more';
+	
 ?>

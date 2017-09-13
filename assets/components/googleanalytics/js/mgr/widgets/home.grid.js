@@ -14,35 +14,30 @@ GoogleAnalytics.grid.Visitors = function(config) {
             dataIndex	: 'visits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 100
         }, {
             header		: _('googleanalytics.visitors'),
             dataIndex	: 'visitors',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 100
         }, {
             header		: _('googleanalytics.pageviews'),
             dataIndex	: 'pageviews',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.visitors_time'),
             dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 100
         }, {
             header		: _('googleanalytics.visits_new'),
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }, {
@@ -50,7 +45,6 @@ GoogleAnalytics.grid.Visitors = function(config) {
             dataIndex	: 'visitBounceRate',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]
@@ -106,28 +100,24 @@ GoogleAnalytics.grid.Sources = function(config) {
             dataIndex	: 'visits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.visitors'),
             dataIndex	: 'visitors',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.visitors_time'),
             dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.visits_new'),
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }, {
@@ -135,7 +125,6 @@ GoogleAnalytics.grid.Sources = function(config) {
             dataIndex	: 'visitBounceRate',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]
@@ -199,21 +188,18 @@ GoogleAnalytics.grid.ContentHigh = function(config) {
             dataIndex	: 'entrances',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.bounces'),
             dataIndex	: 'bounces',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.bouncerate'),
             dataIndex	: 'entranceBounceRate',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]
@@ -270,21 +256,18 @@ GoogleAnalytics.grid.ContentLow = function(config) {
             dataIndex	: 'exits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.bounces'),
             dataIndex	: 'bounces',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.exitrate'),
             dataIndex	: 'exitRate',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]
@@ -340,14 +323,12 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
             dataIndex	: 'visits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.pageviews'),
             dataIndex	: 'pageviewsPerVisit',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }, {
@@ -355,7 +336,6 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
             dataIndex	: 'avgSessionDuration',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
             
         }, {
@@ -363,7 +343,6 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
             dataIndex	: 'percentNewVisits',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }, {
@@ -371,7 +350,6 @@ GoogleAnalytics.grid.ContentSearch = function(config) {
             dataIndex	: 'visitBounceRate',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]
@@ -425,14 +403,12 @@ GoogleAnalytics.grid.Goals = function(config) {
             dataIndex	: 'goalCompletionsAll',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125
         }, {
             header		: _('googleanalytics.goal'),
             dataIndex	: 'goalCompletionsAllPercent',
             sortable	: true,
             editable	: false,
-            fixed		: true,
             width		: 125,
             renderer	: this.renderPercent
         }]

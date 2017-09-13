@@ -43,8 +43,8 @@
 .google-analytics-description .google-analytics-summary #google-analytics-realtime {
 	position: absolute;
 	top: 50%;
-	right: 30px;
-	left: 30px;
+	right: 20px;
+	left: 20px;
 	height: 54px;
 	background: #ffffff;
 	margin: -27px 0 0;
@@ -154,7 +154,11 @@
 /* Dashboard */
 
 .dashboard-google-analytics .body {
-	height: 200px;
+	height: 260px;
+}
+
+.dashboard-google-analytics .body .x-panel-body.x-panel-body-noheader {
+	height: 200px !important;
 }
 
 .dashboard-google-analytics #google-analytics-realtime {
@@ -168,11 +172,39 @@
 	line-height: 54px;
 	text-align: center;
 	font-weight: bold;
-	margin: 20px 0;
+	margin: 18px 0;
 }
 
 .dashboard-google-analytics #google-analytics-realtime .google-analytics-realtime-description {
 	display: block;
 	font-size: 20px;
 	line-height: 30px;
+}
+
+/* Loading */
+
+.google-analytics-loading:after {
+	position: absolute;
+    top: 30%;
+    left: 50%;
+    display: block;
+    width: 60px;
+    height: 60px;
+    content: '';
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3697cd;
+    -webkit-border-radius: 50%;
+	   -moz-border-radius: 50%;
+	   		border-radius: 50%;
+    animation: spin 2s linear infinite;
+    
+}
+
+@keyframes spin {
+    0% {
+	    transform: rotate(0deg);
+	}
+    100% {
+	    transform: rotate(360deg);
+	}
 }

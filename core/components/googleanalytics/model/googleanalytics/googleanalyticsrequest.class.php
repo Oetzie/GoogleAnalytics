@@ -159,9 +159,13 @@
 		 * @return Array|Boolean.
 		 */
 		public function isAuthorized() {
-            return $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_STATUS_URL, array(
-                'access_token'	=> $this->getAccessToken()
-            ));
+		    if (!empty($this->modx->getOption('googleanalytics.refresh_token', null, ''))) {
+                return $this->requestApi(GoogleAnalyticsRequest::API_OAUTH_TOKEN_STATUS_URL, array(
+                    'access_token'	=> $this->getAccessToken()
+                ));
+            }
+
+            return false;
 		}
 		
 		/**

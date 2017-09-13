@@ -127,5 +127,6 @@
     $_lang['googleanalytics.history_4']                         = '28 dagen';
     $_lang['googleanalytics.auth_error']                        = 'Er is een fout opgetreden tijdens het autoriseren, probeer het opnieuw.';
     $_lang['googleanalytics.auth_error_save']                   = 'Er is een fout opgetreden tijdens het opslaan van de autorisatie code, probeer het opnieuw.';
-
+	$_lang['googleanalytics.view_more']							= 'Bekijk meer';
+	
 ?>

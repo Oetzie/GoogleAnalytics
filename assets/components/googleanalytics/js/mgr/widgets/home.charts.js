@@ -2,7 +2,8 @@ GoogleAnalytics.panel.PieChart = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-		listeners		: {
+	    cls			: 'google-analytics-loading',
+		listeners	: {
         	/*'afterrender'	: {
         		fn				: this.getData,
 				scope			: this
@@ -29,6 +30,8 @@ Ext.extend(GoogleAnalytics.panel.PieChart, MODx.Panel, {
 			params 		: params,
 			method		: 'GET',
 			success		: function (result, request) {
+				this.removeClass('google-analytics-loading');
+				
 				var series = [];
 				
 				if (data = Ext.util.JSON.decode(result.responseText)) {
@@ -120,7 +123,8 @@ GoogleAnalytics.panel.LineChart = function(config) {
     config = config || {};
 
     Ext.applyIf(config, {
-		listeners		: {
+		cls			: 'google-analytics-loading',
+		listeners	: {
         	/*'afterrender'	: {
         		fn				: this.getData,
 				scope			: this
@@ -147,6 +151,8 @@ Ext.extend(GoogleAnalytics.panel.LineChart, MODx.Panel, {
 			params 		: params,
 			method		: 'GET',
 			success		: function (result, request) {
+				this.removeClass('google-analytics-loading');
+				
 				var series = [];
 
 				if (data = Ext.util.JSON.decode(result.responseText)) {
